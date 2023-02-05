@@ -21,7 +21,7 @@ func main() {
 	//gin.SetMode(gin.ReleaseMode)
 
 	//engine.Use(gin.LoggerWithWriter(utils.Logger().Out), gin.Recovery())
-	//engine.Static("/images", viper.GetString("server.imagePath")+"/images")
+	engine.Static("/images", viper.GetString("server.imagePath")+"/images")
 
 	router.Register(engine)
 

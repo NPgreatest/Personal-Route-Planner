@@ -6,8 +6,17 @@ import (
 )
 
 func Register(engine *gin.Engine) {
-
+	registerHomeRouters(engine)
 	registerUserRouters(engine)
+}
+
+func registerHomeRouters(engine *gin.Engine) {
+	homeRouter := controller.NewHomeRouter()
+	homeGroup := engine.Group("/home")
+	{
+		homeGroup.GET("/getcomments", Decorate(homeRouter.GetComments))
+		homeGroup.POST("/register", Decorate(homeRouter.RegisterUser))
+	}
 }
 
 func registerUserRouters(engine *gin.Engine) {

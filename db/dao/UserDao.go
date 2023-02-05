@@ -10,7 +10,6 @@ func NewUserDao() *UserDao {
 	return &UserDao{
 		sql: []string{
 			`SELECT * FROM users WHERE id = ? AND password = ?;`,
-			`INSERT INTO users (id, name, password, email, avatar, createtime) VALUES (?, ?, ?, ?, ?, ?);`,
 			`INSERT INTO comment (cid, uid, sid, content, likes, time)VALUES (?, ?, ?, ?, ?, ? );`,
 		},
 	}
@@ -23,6 +22,6 @@ func (u *UserDao) FindUserLogin(id int, password string) (*model.User, error) {
 }
 
 func (u *UserDao) InsertComment(comment model.Comment) error {
-	_, err := sqldb.Exec(u.sql[2], comment.Cid, comment.Uid, comment.Sid, comment.Content, comment.Likes, comment.Time)
+	_, err := sqldb.Exec(u.sql[1], comment.Cid, comment.Uid, comment.Sid, comment.Content, comment.Likes, comment.Time)
 	return err
 }

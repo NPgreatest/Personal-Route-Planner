@@ -84,3 +84,11 @@ func ResponseCommentFailed() *Response {
 func ResponseCommentSuccess() *Response {
 	return NewResponse(http.StatusOK, CommentSuccess)
 }
+
+func ResponseRegisterFailed() *Response {
+	return NewResponse(http.StatusOK, RegisterFailed)
+}
+
+func ResponseRegisterSuccess() *Response {
+	return NewResponse(http.StatusOK, RegisterSuccess)
+}
