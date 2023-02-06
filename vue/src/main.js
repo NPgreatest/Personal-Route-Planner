@@ -5,7 +5,13 @@ import App from './App.vue';
 import 'element-ui/lib/theme-chalk/index.css';
 import {bubbles} from 'vue-canvas-effect';
 import axios from "axios"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
 
+
+Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 
 axios.defaults.baseURL="http://localhost:8082"
 Vue.component('bubbles-effect', bubbles);

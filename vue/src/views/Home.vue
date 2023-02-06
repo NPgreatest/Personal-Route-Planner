@@ -1,5 +1,7 @@
 <template>
+
   <div>
+
     <div class="background2">
       <img :src="imgSrc2" width="100%" height="100%" alt="" />
       <bubbles-effect :options="options" class="bubble"></bubbles-effect>
@@ -11,6 +13,7 @@
         >
           <h1 key="1">{{'智能路线规划及其可视化'}}</h1>
           <p key="2">{{'Intelligent-route-planning-and-visualization'}}</p>
+
         </transition-group>
       </div>
     </div>

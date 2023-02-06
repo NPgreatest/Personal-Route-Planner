@@ -4,12 +4,22 @@
   <div class="site_se">
     <!-- 标题 -->
     <div class="title">
-      <h1>{{ site.title }}</h1>
+      <h1>{{ ' '+site.sname+' ' }}</h1>
+    </div>
+    <div style="display: flex">
+      <div style="flex: 1"></div>
+      <el-button type="primary" style="width: 10%" @click="last">上一景点</el-button>
+      <el-button  type="primary" style="width: 10%" @click="front">下一景点</el-button>
+      <div style="flex: 1"></div>
+    </div>
+
+    <div class="background">
+      <img :src="imgSrc" style="left: 50%" width="20%" height="20%" alt="" />
     </div>
 
     <!-- 正文 -->
     <div class="content-outer">
-      <div class="content-inner" v-html="site.content">
+      <div class="content-inner" v-html="site.description">
 
       </div>
     </div>
@@ -22,16 +32,15 @@
 
         <!-- 评论内容 -->
         <div class="comment" :key="item.id" v-for="item in commentList">
-
-          <b-avatar class="comment-avatar" :src="item.avatar"></b-avatar>
+          <b-avatar class="comment-avatar" :src="item.avatar" ></b-avatar>
           <!-- 昵称和日期 -->
           <!-- <div class="comment-author"> -->
           <span class="author">
-                            {{ item.nickname }}
+                            {{ item.name }}
                         </span>
           <span class="date">
-                            {{ item.createTime | fromatDate("yyyy-MM-dd hh:mm:ss") }}
-                        </span>
+                            {{ item.time | fromatDate("yyyy-MM-dd hh:mm:ss") }}
+          </span>
           <!-- </div> -->
           <!-- 回复内容 -->
           <div class="comment-content">
@@ -68,36 +77,36 @@ export default {
   name:"SiteDeatil",
   data() {
     return {
+      imgSrc: require('../static/logo.png'),
       site: {
-        id: 0,
-        title: "test",
-        content: `esfsfesfesfsefsefs`,
+        sid:"1",
+        sname:" ",
+        webset: "test",
+        discription: `esfsfesfesfsefsefs`,
         updateTime: "2021-03-30",
         createTime: "2021-03-30",
         views: 1024,
         appreciation: false,
-        typename: "框架底层原理",
-        nickname: "Jack Ma"
       },
       comment: {         //评论数据
         nickname: "",
         email: "",
-        content: "fesfsfsefsef",
-        avatar: "http://localhost:8080/images/firstPic/avatar1.png",
+        content: "加载失败",
+        //avatar: "http://localhost:8080/images/1.jpg",
       },
       commentList: [
         {
-          nickname: "小兔叽",
-          email: "rabbit@blog.com",
+          id:1,
+          name: "小兔叽",
           content: "very good!",
-          avatar: "http://localhost:8080/firstPic/avatar1.png",
+          //avatar: "http://localhost:8080/images/1.jpg",
           createTime: "2021-03-31 22:35",
         },
         {
-          nickname: "小脑斧",
-          email: "tiger@blog.com",
+          id:2,
+          name: "小脑斧",
           content: "excellent!",
-          avatar: "http://localhost:8080/firstPic/avatar1.png",
+          //avatar: "http://localhost:8080/images/1.jpg",
           createTime: "2021-03-31 22:35",
         }
       ]
@@ -133,10 +142,10 @@ export default {
     getSiteDetails: async function() {
       let siteId = this.$route.query.id;
       siteId = parseInt(siteId);
-      const {data: res} = await this.$axios.get("/home/siteDetails", {params: {siteid: siteId}});
+      const {data: res} = await this.$axios.get("/home/sitedetails", {params: {siteid: siteId}});
       if(res.status === 1) {
         this.site = res.data.length > 0 ? res.data[0] : this.site;
-        this.tags = res.data.length > 1 ? res.data[1] : this.tags;
+        this.imgSrc=this.site.pic;
         var hljs = require('highlight.js');
         var md = require('markdown-it')({
           html: true,
@@ -148,7 +157,7 @@ export default {
                 return '<pre class="hljs"><code>' +
                     hljs.highlight(lang, str, true).value +
                     '</code></pre>';
-              } catch (__) {}
+              } catch (__) { }
             }
 
             return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
@@ -160,10 +169,29 @@ export default {
         md.renderer.rules.image = (token, idx, options, env, self) => {
           return "<div align='center' class='blog_image'>" + md.renderer.renderToken(token, idx, options, env, self) + "</div>"
         }
-        this.site.content = md.render(this.site.content);
+        this.site.description = md.render(this.site.description);
 
         this.getCommentList();
       }
+    },
+    last(){
+      const next = this.site.sid - 1;
+      if (next===0){
+        this.$message.info('已经到了首个景点');
+          return;
+      }
+      this.$router.push("/sitedetails?id="+next.toString())
+      location.reload()
+    },
+    front: async function(){
+      const next = this.site.sid + 1;
+      const {data: res} = await this.$axios.get("/home/sitedetails", {params: {siteid: next}});
+      if (res.status !=1){
+        this.$message.info('到达最后一个景点');
+        return;
+      }
+      this.$router.push("/sitedetails?id="+next.toString())
+      location.reload()
     },
     publishComment: async function () {
       this.comment.blogId = this.site.id;
@@ -180,7 +208,9 @@ export default {
       this.getCommentList();
     },
     getCommentList: async function() {
-      const {data: res} = await this.$axios.get("/home/getcomments", {params: {siteid: this.site.id}});
+
+      let siteId = this.$route.query.id;
+      const {data: res} = await this.$axios.get("/home/getcomments", {params: {siteid: siteId}});
       if(res.status === 1) {
         this.commentList = res.data.length > 0 ? res.data[0] : this.commentList;
       }
@@ -201,6 +231,19 @@ export default {
 </style>
 
 <style lang="less" scoped>
+
+.pageContainer{
+  left:30px;
+  border-radius: 15px;
+  background-clip: padding-box;
+  margin: 180px auto;
+  width: 450px;
+  padding: 15px 35px 15px 35px;
+  background: aliceblue;
+  border:1px solid blueviolet;
+  box-shadow: 0 0 25px #643965;
+  z-index:1;
+}
 
 .site_se {
   background: url('~@/assets/bg1.jpg')  fixed 0px 0px;
