@@ -8,7 +8,7 @@
         <ul>
           <li><NaviItem :activeRoute="activeRoute" index-name="首页"  rout="/home"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="问答"  rout="/types"></NaviItem></li>
-          <li><NaviItem :activeRoute="activeRoute" index-name="景点展示" rout="/tags"></NaviItem></li>
+          <li><NaviItem :activeRoute="activeRoute" index-name="景点展示" rout="/sitedetails"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="景点推荐" rout="/timeLine"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="路线规划"  rout="/essay"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="留言板" rout="/msgBoard"></NaviItem></li>

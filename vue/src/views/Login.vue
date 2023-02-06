@@ -8,15 +8,19 @@
         系统登录
       </h3>
       <el-form-item prop="username">
-        <el-input type="text" v-model="loginForm.username" placeholder="亲，请输入用户名" >
+        <el-input type="text" v-model="loginForm.username" placeholder="请输入用户名">
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" v-model="loginForm.password" placeholder="亲，请输入密码" >
+        <el-input type="password" v-model="loginForm.password" placeholder="请输入密码">
         </el-input>
       </el-form-item>
-      <el-checkbox v-model="checked" class="loginRemember">记住我</el-checkbox>
+      <el-form-item prop="primary">
       <el-button type="primary" style="width:100%" @click="submitLogin">登录</el-button>
+      </el-form-item>
+      <el-form-item prop="primary">
+      <el-button type="primary" style="width:100%" @click="submitRegister">注册</el-button>
+      </el-form-item>
     </el-form>
     </div>
 </template>
@@ -34,9 +38,9 @@ export default {
       },
       checked: true,
       rules:{
-        username:[{required:true,message:"请输入用户名",trigger:"blur"},{ min: 5, max: 14, message: '长度在 5 到 14 个字符', trigger: 'blur' }
+        username:[{required:true,message:"请输入用户名",trigger:"blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
-        password:[{required:true,message:"请输入密码",trigger:"blur"},,{ min: 2,  message: '密码长度要大于6', trigger: 'blur' }],
+        password:[{required:true,message:"请输入密码",trigger:"blur"},{ min: 6,  message: '密码长度要不小于6', trigger: 'blur' }],
       },
       imgSrc:require('../static/bg2.jpg')
 
@@ -47,26 +51,28 @@ export default {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (valid) {
           const forms={
-              id:  parseInt(this.loginForm.username) ,
+              name:  this.loginForm.username,
               password:this.loginForm.password
           }
           const {data: res} = await this.$axios.post("/login",forms);
           if (res.status==200 ){
-            alert(res.message);
+            this.$message.error(res.message);
             return false;
           }
-          alert('登录成功');
           const token = res.data[0]
-          const id = res.data[1]
+          const name = res.data[1]
           this.$message.success(res.message);
           window.sessionStorage.setItem("token", token);
-          window.sessionStorage.setItem("userId", id);
+          window.sessionStorage.setItem("userId", name);
           await this.$router.push("/home")
         } else {
           this.$message.error('登录出错请重新输入');
           return false;
         }
       });
+    },
+    submitRegister(){
+      this.$router.push("/register")
     }
   }
 };

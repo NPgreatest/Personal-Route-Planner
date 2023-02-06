@@ -4,7 +4,7 @@ import "time"
 
 type Comment struct {
 	Cid     int64     `form:"cid" json:"cid"`
-	Uid     int       `form:"uid"json:"uid"`
+	Name    string    `form:"uid"json:"uid"`
 	Sid     int       `form:"sid"json:"sid"`
 	Content string    `form:"content"json:"content"`
 	Likes   int       `form:"likes"json:"likes"`

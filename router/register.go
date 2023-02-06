@@ -16,6 +16,8 @@ func registerHomeRouters(engine *gin.Engine) {
 	{
 		homeGroup.GET("/getcomments", Decorate(homeRouter.GetComments))
 		homeGroup.POST("/register", Decorate(homeRouter.RegisterUser))
+		homeGroup.GET("/allsites", Decorate(homeRouter.FindAllSites))
+		homeGroup.GET("/sitedetails", Decorate(homeRouter.FindSiteDetails))
 	}
 }
 

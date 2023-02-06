@@ -8,17 +8,15 @@ import (
 )
 
 type Claim struct {
-	UserId int
-	Name   string
+	Name string
 	jwt.StandardClaims
 }
 
 var jwtKey = []byte("gpa-manager-npgreatest")
 
-func CreateToken(id int, name string, expireDuration time.Duration) (string, error) {
+func CreateToken(name string, expireDuration time.Duration) (string, error) {
 	claims := &Claim{
-		UserId: id,
-		Name:   name,
+		Name: name,
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    "mgh",
@@ -35,9 +33,9 @@ func CreateToken(id int, name string, expireDuration time.Duration) (string, err
 	return tokenStr, nil
 }
 
-func VerifyToken(token string) (int, string, bool) {
+func VerifyToken(token string) (string, bool) {
 	if token == "" {
-		return 0, "", false
+		return "", false
 	}
 
 	tok, err := jwt.ParseWithClaims(token, &Claim{}, func(token *jwt.Token) (interface{}, error) {
@@ -45,14 +43,14 @@ func VerifyToken(token string) (int, string, bool) {
 	})
 	if err != nil {
 		fmt.Println("ParseWithClaims error %v", err)
-		return 0, "", false
+		return "", false
 	}
 
 	if claims, ok := tok.Claims.(*Claim); ok && tok.Valid {
-		return claims.UserId, claims.Name, true
+		return claims.Name, true
 	} else {
 		fmt.Println("%v", err)
-		return 0, "", false
+		return "", false
 	}
 
 }

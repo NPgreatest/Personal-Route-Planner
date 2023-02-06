@@ -23,21 +23,22 @@ func (u *UserController) UserLogin(ctx *gin.Context) *response.Response {
 	fmt.Println("vertifing password...")
 	var user model.User
 	err := ctx.ShouldBind(&user)
+	user.Avatar = " "
 	fmt.Println(user)
-	if err != nil || user.Id == 0 || user.Password == "" {
+	if err != nil || user.Password == "" {
 		return response.NewResponseOkND(response.LoginFailed)
 	}
-	resUser, err := u.userService.CheckUser(user.Id, user.Password)
+	resUser, err := u.userService.CheckUser(user.Name, user.Password)
 	if err != nil {
 		fmt.Println(user, err)
 		return response.NewResponseOkND(response.LoginFailed)
 	}
-	token, err := utils.CreateToken(resUser.Id, resUser.Name, time.Hour*24)
+	token, err := utils.CreateToken(resUser.Name, time.Hour*24)
 	if err != nil {
 		fmt.Println(user, err)
 		return response.NewResponseOkND(response.OperateFailed)
 	}
-	return response.NewResponseOk(response.LoginSuccess, token, resUser.Id)
+	return response.NewResponseOk(response.LoginSuccess, token, resUser.Name)
 }
 
 func (u *UserController) UserComment(ctx *gin.Context) *response.Response {
@@ -48,7 +49,7 @@ func (u *UserController) UserComment(ctx *gin.Context) *response.Response {
 		return response.ResponseCommentFailed()
 	}
 	comment.Cid = utils.GenerateId(1)
-	comment.Uid, _, _ = utils.VerifyToken(ctx.GetHeader("Authorization"))
+	comment.Name, _ = utils.VerifyToken(ctx.GetHeader("Authorization"))
 	err = u.userService.InsertComment(comment)
 	if err != nil {
 		fmt.Println(comment, err)
@@ -67,7 +68,7 @@ func LoginAuthenticationMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if _, _, ok := utils.VerifyToken(token); !ok {
+		if _, ok := utils.VerifyToken(token); !ok {
 			ctx.JSON(http.StatusOK, &(response.NewResponseOkND(response.Unauthorized).R))
 			ctx.Abort()
 			return
