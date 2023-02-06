@@ -23,6 +23,7 @@ func (u *UserController) UserLogin(ctx *gin.Context) *response.Response {
 	fmt.Println("vertifing password...")
 	var user model.User
 	err := ctx.ShouldBind(&user)
+	fmt.Println(user)
 	if err != nil || user.Id == 0 || user.Password == "" {
 		return response.NewResponseOkND(response.LoginFailed)
 	}

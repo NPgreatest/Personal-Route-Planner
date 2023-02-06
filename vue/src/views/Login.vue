@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContainer">
+    <div class="background">
+      <img :src="imgSrc" width="100%" height="100%" alt="" />
+    </div>
+    <el-form :rules="rules" ref="loginFormRef" :model="loginForm" class="loginContainer">
       <h3 class="loginTitle">
         系统登录
       </h3>
@@ -12,16 +15,10 @@
         <el-input type="password" v-model="loginForm.password" placeholder="亲，请输入密码" >
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
-        <el-input type="text" auto-complete="false" v-model="loginForm.code" placeholder="点击图片更换验证码" style="width: 250px;margin-right: 5px">
-        </el-input>
-        <img :src="captchaUrl">
-
-      </el-form-item>
       <el-checkbox v-model="checked" class="loginRemember">记住我</el-checkbox>
       <el-button type="primary" style="width:100%" @click="submitLogin">登录</el-button>
     </el-form>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -33,24 +30,38 @@ export default {
       captchaUrl: "",
       loginForm:{
         username:"admin",
-        password:"ssssss",
-        code:''
+        password:"123456",
       },
       checked: true,
       rules:{
         username:[{required:true,message:"请输入用户名",trigger:"blur"},{ min: 5, max: 14, message: '长度在 5 到 14 个字符', trigger: 'blur' }
         ],
-        password:[{required:true,message:"请输入密码",trigger:"blur"},,{ min: 6,  message: '密码长度要大于6', trigger: 'blur' }],
-        code:[{required:true,message:"请输入验证码",trigger:"blur"}],
-      }
+        password:[{required:true,message:"请输入密码",trigger:"blur"},,{ min: 2,  message: '密码长度要大于6', trigger: 'blur' }],
+      },
+      imgSrc:require('../static/bg2.jpg')
 
     }
   },
   methods:{
     submitLogin(){
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginFormRef.validate(async (valid) => {
         if (valid) {
-          alert('提交成功');
+          const forms={
+              id:  parseInt(this.loginForm.username) ,
+              password:this.loginForm.password
+          }
+          const {data: res} = await this.$axios.post("/login",forms);
+          if (res.status==200 ){
+            alert(res.message);
+            return false;
+          }
+          alert('登录成功');
+          const token = res.data[0]
+          const id = res.data[1]
+          this.$message.success(res.message);
+          window.sessionStorage.setItem("token", token);
+          window.sessionStorage.setItem("userId", id);
+          await this.$router.push("/home")
         } else {
           this.$message.error('登录出错请重新输入');
           return false;
@@ -62,15 +73,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+.background{
+  top:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  position: absolute;
+}
+
+
 .loginContainer{
+
+  left:30px;
   border-radius: 15px;
   background-clip: padding-box;
   margin: 180px auto;
-  width: 350px;
+  width: 450px;
   padding: 15px 35px 15px 35px;
   background: aliceblue;
   border:1px solid blueviolet;
-  box-shadow: 0 0 25px #f885ff;
+  box-shadow: 0 0 25px #643965;
+  z-index:1;
 }
 .loginTitle{
   margin: 0px auto 48px auto;
@@ -81,9 +105,8 @@ export default {
   text-align: left;
   margin: 0px 0px 15px 0px;
 }
-body{
-  background-image: url("../assets/background.jpg") ;
-  background-size:100%;
-}
+
+
+
 </style>
 
