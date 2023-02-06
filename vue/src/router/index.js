@@ -1,6 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-//import Index from "../views"
+import Index from "../views"
 import Login from "../views/Login.vue"
 import Home from "../views/Home.vue"
 
@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 const routes=[
     {
         path:"/",
-        component: Home,
+        component: Index,
         meta:{
             auth:false
         },

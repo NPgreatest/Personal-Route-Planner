@@ -3,7 +3,16 @@
     <div class="background2">
       <img :src="imgSrc2" width="100%" height="100%" alt="" />
       <bubbles-effect :options="options" class="bubble"></bubbles-effect>
-
+      <div id="title">
+        <transition-group appear
+                          name="animate__animated animate__bounce animate__slow"
+                          enter-active-class="animate__bounceIn"
+                          leave-active-class="animate__bounceOut"
+        >
+          <h1 key="1">{{'智能路线规划及其可视化'}}</h1>
+          <p key="2">{{'Intelligent-route-planning-and-visualization'}}</p>
+        </transition-group>
+      </div>
     </div>
 
 
@@ -17,7 +26,7 @@
 //import bg1 from "../assets/bg1.jpg"
 //import bg2 from "../assets/bg2.jpg"
 
-//import "animate.css"
+import "animate.css"
 
 
 export default {
@@ -25,7 +34,7 @@ export default {
   name: "Home",
   data(){
     return{
-      imgSrc2:require('../static/bg1.jpg'),
+      imgSrc2:require('../static/background.jpg'),
       options: {
         color: 'random', //Bubble color
         radius: 20, //Bubble radius
@@ -41,11 +50,12 @@ export default {
 
 <style lang="less" scoped>
 .background2{
-  top:0;
+  //top:0;
   width:100%;
   height:100%;
   z-index:-1;
   position: absolute;
+  background-size: 100% 100%;
 }
 .bubble {
   width: 100%;
@@ -60,6 +70,23 @@ export default {
   80% { transform: translateY(0); }
   100% { transform: translateY(0); }
 }
+#title {
+  //z-index:1;
+  position: absolute;
+  user-select: none;
+  font-weight: 760;
+  line-height: 1.25;
+  color: white;
+  text-align: center;
+  top: 42%;
+  left: 30%;
+  h1 {
+    padding-bottom: 20px;
+  }
 
+  p {
+    font-size: 35px;
+  }
+}
 
 </style>
