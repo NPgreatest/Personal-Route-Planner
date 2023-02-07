@@ -16,7 +16,7 @@ func NewSiteDao() *SiteDao {
 		`SELECT * FROM sites`,
 		`SELECT * FROM sites WHERE sid=?;`,
 		`SELECT * FROM price WHERE sid=?;`,
-		`SELECT avatar FROM users WHERE users.name in (SELECT name FROM comment WHERE sid=?);`,
+		`SELECT avatar FROM users RIGHT JOIN (SELECT name FROM comment WHERE sid=?) a ON a.name=users.name;`,
 	}}
 }
 

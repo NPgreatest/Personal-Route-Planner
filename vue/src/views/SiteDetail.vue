@@ -2,9 +2,10 @@
 <template>
 
   <div class="site_se">
+
     <!-- 标题 -->
     <div class="title">
-      <h1>{{ ' '+site.sname+' ' }}</h1>
+      <h1 style="padding-top: 60px;" > {{ ' '+site.sname+' ' }}</h1>
     </div>
     <div style="display: flex">
       <div style="flex: 1"></div>
@@ -13,9 +14,33 @@
       <div style="flex: 1"></div>
     </div>
 
-    <div class="background">
-      <img :src="imgSrc" style="left: 50%" width="20%" height="20%" alt="" />
-    </div>
+
+
+      <p top="100px"></p>
+      <el-row type="flex" class="row-bg" justify="center"  gutter="50">
+
+        <el-col :span="6"><div class="grid-1" style="left: 10%" />
+          <div id="chart" style="width: 600px; height: 400px; left:-30%"></div>
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
+
+        <el-col :span="6"><div class="grid-2" style="top: 10%" />
+          <div class="background">
+            <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
+          </div>
+          <div class="grid-content ep-bg-purple" />
+        </el-col>
+
+      </el-row>
+
+
+
+
+
+
+
+
+
 
     <!-- 正文 -->
     <div class="content-outer">
@@ -57,7 +82,7 @@
       <b-container fluid>
         <b-row >
           <b-col sm="3">
-            <b-button variant="outline-info" @click="publishComment">
+            <b-button variant="outline-info" @click="publishComment" >
               发布
             </b-button>
           </b-col>
@@ -73,6 +98,7 @@
 
 
 <script>
+
 export default {
   name:"SiteDeatil",
   data() {
@@ -91,7 +117,7 @@ export default {
       comment: {         //评论数据
         nickname: "",
         email: "",
-        content: "加载失败",
+        content: "",
         //avatar: "http://localhost:8080/images/1.jpg",
       },
       commentList: [
@@ -138,6 +164,9 @@ export default {
       return fmt;
     }
   },
+  mounted(){
+    this.drawLine();
+  },
   methods: {
     getSiteDetails: async function() {
       let siteId = this.$route.query.id;
@@ -146,6 +175,7 @@ export default {
       if(res.status === 1) {
         this.site = res.data.length > 0 ? res.data[0] : this.site;
         this.imgSrc=this.site.pic;
+
         var hljs = require('highlight.js');
         var md = require('markdown-it')({
           html: true,
@@ -173,6 +203,7 @@ export default {
 
         this.getCommentList();
       }
+      this.drawChart();
     },
     last(){
       const next = this.site.sid - 1;
@@ -206,6 +237,7 @@ export default {
       this.comment.content = "";
 
       this.getCommentList();
+
     },
     getCommentList: async function() {
 
@@ -215,7 +247,38 @@ export default {
         this.commentList = res.data.length > 0 ? res.data[0] : this.commentList;
       }
     },
+    drawChart() {
+      let myChart = this.$echarts.init(document.getElementById("chart"));
 
+      var option = {
+        title: {
+          text: "景点价格",
+        },
+        tooltip: {},
+        legend: {
+          data: ["价格"],
+        },
+        xAxis: {
+          data: ["成人票","儿童票"],
+        },
+        yAxis: {},
+        series: [
+          {
+            name: "销量",
+            type: "bar",
+            data: [0,0],
+          },
+        ],
+      };
+      myChart.setOption(option);
+      for (var i=0;i<this.site.prices.length;i++){
+        //alert(this.site.prices[i].aimed);
+        option.xAxis.data[i]=this.site.prices[i].aimed;
+        option.series[0].data[i]=this.site.prices[i].price;
+      }
+      myChart.setOption(option);
+
+    },
   }
 }
 </script>
@@ -231,6 +294,19 @@ export default {
 </style>
 
 <style lang="less" scoped>
+
+.common-layout{
+
+  border-radius: 15px;
+  background-clip: padding-box;
+  margin: 20px auto;
+  width: 1500px;
+  padding: 15px 35px 15px 35px;
+  background: aliceblue;
+  border:1px solid blueviolet;
+  box-shadow: 0 0 25px #643965;
+  z-index:1;
+}
 
 .pageContainer{
   left:30px;
@@ -439,6 +515,21 @@ export default {
 //    //设置或检索伸缩盒子对象的子元素的排列方式
 //    -webkit-box-orient: vertical;
 //}
+
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
+}
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
 
 </style>
 
