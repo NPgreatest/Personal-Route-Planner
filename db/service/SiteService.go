@@ -17,8 +17,8 @@ func (s *SiteService) GetComment(sid int) ([]model.Comment, error) {
 	return s.siteDao.FindAllComment(sid)
 }
 
-func (s *SiteService) FindAllSites() (sites []model.Sites, err error) {
-	return s.siteDao.FindAllSites()
+func (s *SiteService) FindAllSites(tag int) (sites []model.Sites, err error) {
+	return s.siteDao.FindAllSites(tag)
 }
 
 func (s *SiteService) FindSiteDetails(siteid int) (site model.Sites, err error) {

@@ -5,6 +5,7 @@ import Login from "../views/Login.vue"
 import Home from "../views/Home.vue"
 import Register from "../views/Register.vue"
 import SiteDetail from "../views/SiteDetail.vue";
+import Tags from "../views/Tags.vue"
 
 Vue.use(VueRouter);
 
@@ -18,7 +19,8 @@ const routes=[
         redirect:"/home",
         children:[
             {path:"/home",component:Home,meta:{auth:false}},
-            {path: "sitedetails",component: SiteDetail,meta: {auth: false}}
+            {path: "sitedetails",component: SiteDetail,meta: {auth: false}},
+            {path:"tags",component: Tags,meta: {auth: false}}
         ]
     },
     {

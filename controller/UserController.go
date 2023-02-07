@@ -50,9 +50,10 @@ func (u *UserController) UserComment(ctx *gin.Context) *response.Response {
 	}
 	comment.Cid = utils.GenerateId(1)
 	comment.Name, _ = utils.VerifyToken(ctx.GetHeader("Authorization"))
+	comment.Time = time.Now()
 	err = u.userService.InsertComment(comment)
 	if err != nil {
-		fmt.Println(comment, err)
+		//fmt.Println(comment, err)
 		return response.ResponseCommentFailed()
 	}
 	return response.ResponseCommentSuccess()

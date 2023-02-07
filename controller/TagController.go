@@ -25,7 +25,7 @@ func (t *TagController) FindAllTags(ctx *gin.Context) *response.Response {
 }
 
 func (t *TagController) FindSitesByTags(ctx *gin.Context) *response.Response {
-	con, err := strconv.Atoi(ctx.Query("siteid"))
+	con, err := strconv.Atoi(ctx.Query("tagid"))
 	if err != nil {
 		fmt.Println("siteid wrong")
 		return response.ResponseQueryFailed()

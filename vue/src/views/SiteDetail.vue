@@ -24,7 +24,7 @@
           <div class="grid-content ep-bg-purple" />
         </el-col>
 
-        <el-col :span="6"><div class="grid-2" style="top: 10%" />
+        <el-col :span="6"><div class="grid-2" style="top: 10%; " />
           <div class="background">
             <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
           </div>
@@ -32,14 +32,6 @@
         </el-col>
 
       </el-row>
-
-
-
-
-
-
-
-
 
 
     <!-- 正文 -->
@@ -103,7 +95,7 @@ export default {
   name:"SiteDeatil",
   data() {
     return {
-      imgSrc: require('../static/logo.png'),
+      //imgSrc: require('../static/logo.png'),
       site: {
         sid:"1",
         sname:" ",
@@ -225,19 +217,16 @@ export default {
       location.reload()
     },
     publishComment: async function () {
-      this.comment.blogId = this.site.id;
       if(!this.comment.content) {
         this.$message.warning("请输入评论内容")
         return
       }
-
+      this.comment.name=window.sessionStorage.getItem("userId");
+      this.comment.Sid=this.site.sid;
+      //alert(this.comment.name+this.comment.Sid);
       await this.$axios.post("/user/comment", this.comment);//sgrgdrgergesfsegsgdrgdrgdrgrdgdgdrgdrgdvrd
-      this.comment.nickname = "";
-      this.comment.email = "";
-      this.comment.content = "";
-
-      this.getCommentList();
-
+      this.$message.success('评论成功！')
+      location.reload()
     },
     getCommentList: async function() {
 
