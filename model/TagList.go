@@ -1,6 +1,6 @@
 package model
 
 type TagList struct {
-	Tag     int    `json:"sid"`
-	TagName string `json:"typeName"`
+	TagId int    `json:"tagid"`
+	Name  string `json:"name"`
 }

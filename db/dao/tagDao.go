@@ -1,6 +1,9 @@
 package dao
 
-import "Personal-Route-Planner/model"
+import (
+	"Personal-Route-Planner/model"
+	"fmt"
+)
 
 type TagDao struct {
 	sql []string
@@ -16,13 +19,14 @@ func NewTagDao() *TagDao {
 func (h *TagDao) FindAllTags() (tags []model.TagList, err error) {
 	err = sqldb.Select(&tags, h.sql[0])
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	return
 }
 
 func (h *TagDao) FindSitesByTags(tagid int) (sites []model.Sites, err error) {
-	err = sqldb.Select(&sites, h.sql[1])
+	err = sqldb.Select(&sites, h.sql[1], tagid)
 	if err != nil {
 		return nil, err
 	}
