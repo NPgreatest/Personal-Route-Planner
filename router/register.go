@@ -13,12 +13,15 @@ func Register(engine *gin.Engine) {
 func registerHomeRouters(engine *gin.Engine) {
 	homeRouter := controller.NewHomeRouter()
 	siteRouter := controller.NewSiteRouter()
+	tagRouter := controller.NewTagRouter()
 	homeGroup := engine.Group("/home")
 	{
 		homeGroup.GET("/getcomments", Decorate(siteRouter.GetComments))
 		homeGroup.POST("/register", Decorate(homeRouter.RegisterUser))
 		homeGroup.GET("/allsites", Decorate(siteRouter.FindAllSites))
 		homeGroup.GET("/sitedetails", Decorate(siteRouter.FindSiteDetails))
+		homeGroup.GET("/alltags", Decorate(tagRouter.FindAllTags))
+		homeGroup.GET("/siteslist", Decorate(tagRouter.FindSitesByTags))
 	}
 }
 
