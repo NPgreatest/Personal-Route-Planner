@@ -24,7 +24,7 @@
           <div class="grid-content ep-bg-purple" />
         </el-col>
 
-        <el-col :span="6"><div class="grid-2" style="top: 10%" />
+        <el-col :span="6"><div class="grid-2" style="top: 10%; " />
           <div class="background">
             <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
           </div>
@@ -32,14 +32,6 @@
         </el-col>
 
       </el-row>
-
-
-
-
-
-
-
-
 
 
     <!-- 正文 -->
@@ -103,7 +95,7 @@ export default {
   name:"SiteDeatil",
   data() {
     return {
-      imgSrc: require('../static/logo.png'),
+      //imgSrc: require('../static/logo.png'),
       site: {
         sid:"1",
         sname:" ",

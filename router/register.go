@@ -21,7 +21,7 @@ func registerHomeRouters(engine *gin.Engine) {
 		homeGroup.GET("/allsites", Decorate(siteRouter.FindAllSites))
 		homeGroup.GET("/sitedetails", Decorate(siteRouter.FindSiteDetails))
 		homeGroup.GET("/alltags", Decorate(tagRouter.FindAllTags))
-		homeGroup.GET("/siteslist", Decorate(tagRouter.FindSitesByTags))
+		homeGroup.GET("/sitesbytags", Decorate(tagRouter.FindSitesByTags))
 	}
 }
 
