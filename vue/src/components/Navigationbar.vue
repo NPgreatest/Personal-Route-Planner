@@ -1,7 +1,9 @@
 <template>
   <div class="navi-bar">
-    <p>{{ '欢迎!' }}</p>
+
     <div class="navi-bar-center">
+      <p class="title">{{ '欢迎!' }}  {{userName}}</p>
+      <el-button v-if="stat=='已登录'" @click="last" class="title2" type="text" >(退出)</el-button>
       <div class="navi-bar-item-group">
         <i @click="fullscreen" class="iconfont icon-quanpingmu fullscreen"></i>
         <!--导航按键-->
@@ -13,7 +15,7 @@
           <li><NaviItem :activeRoute="activeRoute" index-name="路线规划"  rout="/essay"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="留言板" rout="/msgBoard"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="关于"  rout="/about"></NaviItem></li>
-          <li><NaviItem :activeRoute="activeRoute" index-name="登录"  rout="/login"></NaviItem></li>
+          <li><NaviItem :activeRoute="activeRoute" index-name="登录" rout="/login"   ></NaviItem></li>
         </ul>
       </div>
     </div>
@@ -25,23 +27,37 @@ import NaviItem from "./NaviItem";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navigationbar",
+  userName:'',
+
   components: { NaviItem },
   data(){
       return{
-      activeRoute:"/home"
+      activeRoute:"/home",
+        stat:'登录',
       }
   },
   methods:{
-      fullscreen(){
+    fullscreen(){
         const de = document.documentElement;
         if(de.requestFullscreen) {
           de.requestFullscreen();
         }
         window.scrollTo(0, 1);
-      }
+      },
+    last(){
+      window.sessionStorage.clear()
+      location.reload()
+    },
   },
+
   created() {
     this.activeRoute = this.$router.currentRoute.path
+    this.userName=window.sessionStorage.getItem("userId");
+    if(this.userName==null){
+      this.stat='未登录'
+    }else{
+      this.stat='已登录'
+    }
   },
   watch: {
     // 监听路由改变，路由改变时给activeRoute赋值，从而让导航栏组件高亮
@@ -123,7 +139,7 @@ li {
 
 }
 
-p {
+.title {
   float: left;
   line-height: 1.5;
   text-align: center;
@@ -132,6 +148,20 @@ p {
   margin: 10px 0 0 50px;
   height: 40px;
   background: -webkit-linear-gradient(45deg,#70f7fe,#fbd7c6,#fdefac,#bfb5dd,#bed5f5);
+  -webkit-background-clip: text;
+  font-weight: bolder;
+  color: transparent;
+  user-select: none;
+}
+
+.title2 {
+  //float: left;
+  line-height: 2.5;
+  text-align: center;
+  font-size: 24px;
+  align-items: center;
+  margin: -15px 0 0 10px;
+  background: -webkit-linear-gradient(45deg, #bb165b, #dc1d1d, #ea2449, #dc1d1d,#bed5f5);
   -webkit-background-clip: text;
   font-weight: bolder;
   color: transparent;

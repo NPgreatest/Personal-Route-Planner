@@ -23,10 +23,10 @@
         <el-input type="mail" v-model="registerForm.mail" placeholder="请输入邮箱" >
         </el-input>
       </el-form-item>
-      <el-form-item prop="avatar">
-        <el-input type="avatar" v-model="registerForm.avatar" placeholder="选择头像(默认为空)" >
-        </el-input>
-      </el-form-item>
+      <div class="ava">头像(必须):</div>
+      <el-upload  :on-change="handleelchange" :limit="1" :auto-upload="false" list-type="picture-card" >
+        <i class="el-icon-plus"></i>
+      </el-upload>
       <el-button type="primary" style="width:100%" @click="submitRegister">注册</el-button>
     </el-form>
   </div>
@@ -54,23 +54,38 @@ export default {
         mail:[{require: true, trigger: "blur"},{min:1,message:'邮箱不能为空',trigger: "blur"}],
         avatar:[{require: true, trigger: "blur"},{min:1,message:'不能为空',trigger: "blur"}],
       },
-      imgSrc:require('../static/bg1.jpg')
-
+      imgSrc:require('../static/bg1.jpg'),
+      uploadava:'',
     }
   },
   methods:{
+    handleelchange(file) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file.raw);
+      var _this=this
+      reader.onload = function(){
+        console.log(this.result);
+        _this.uploadava=this.result
+
+      }
+      //axios.post("接口地址", formdata).then(res => { console.log(res) })
+    },
     submitRegister(){
+      console.log(this.uploadava)
       this.$refs.registerFormRef.validate(async (valid) => {
         if (valid) {
           if (this.registerForm.password!==this.registerForm.password2){
               this.$message.error("两次密码不一致");
               return false;
           }
+
+
           const forms={
             name:  this.registerForm.username,
             password:this.registerForm.password,
             email:this.registerForm.mail,
-            avatar: this.registerForm.avatar,
+            avatar: this.uploadava,
+
           }
           const {data: res} = await this.$axios.post("/home/register",forms);
           if (res.status==202 ){
@@ -118,6 +133,11 @@ export default {
   margin: 0px auto 48px auto;
   text-align: center;
   font-size: 40px;
+}
+.ava{
+  margin: 0px auto ;
+  text-align: center;
+  font-size: 20px;
 }
 .registerRemember{
   text-align: left;

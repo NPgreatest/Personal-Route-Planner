@@ -45,7 +45,7 @@ func (u *UserController) UserComment(ctx *gin.Context) *response.Response {
 	var comment model.Comment
 	err := ctx.ShouldBind(&comment)
 	if err != nil || comment.Sid == 0 || comment.Content == "" {
-		fmt.Println(comment, err)
+		//fmt.Println(comment, err)
 		return response.ResponseCommentFailed()
 	}
 	comment.Cid = utils.GenerateId(1)

@@ -11,10 +11,10 @@
                 enter-active-class="animate__fadeInDown"
                 leave-active-class="animate__fadeOutUp"
     >
-      <el-row  class="tag-area" :gutter="20" style="margin: auto" >
+      <el-row  class="tag-area" :gutter="20" style="margin: auto; display: flex;flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px "    >
           <li :key="item.tagid" v-for="item in tags">
             <el-col :span="4">
-            <el-button type="success" @click="jumpPage(item.tagid)" >{{item.name}}</el-button>
+            <el-button type="success" @click="jumpPage(item.tagid)"  class="buttons" >{{item.name}}</el-button>
             </el-col>
           </li>
       </el-row>
@@ -207,6 +207,11 @@ ul, li {
 
 .pagebar {
   padding-bottom: 50px;
+}
+
+.buttons:hover {
+  transform:  scale(1.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 </style>

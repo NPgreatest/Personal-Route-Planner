@@ -15,6 +15,6 @@ func NewHomeDao() *HomeDao {
 		}}
 }
 func (h *HomeDao) RegisterNewUser(user model.User) error {
-	_, err := sqldb.Exec(h.sql[1], user.Name, user.Password, user.Email, user.Avatar, user.CreateTime)
+	_, err := sqldb.Exec(h.sql[0], user.Name, user.Password, user.Email, user.Avatar, user.CreateTime)
 	return err
 }

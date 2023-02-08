@@ -225,6 +225,11 @@ export default {
       this.comment.Sid=this.site.sid;
       //alert(this.comment.name+this.comment.Sid);
       await this.$axios.post("/user/comment", this.comment);//sgrgdrgergesfsegsgdrgdrgdrgrdgdgdrgdrgdvrd
+      if (window.sessionStorage.getItem("userId")==null){
+        this.$message.error('评论失败，请登录。')
+        this.$router.push("/login")
+        return;
+      }
       this.$message.success('评论成功！')
       location.reload()
     },
