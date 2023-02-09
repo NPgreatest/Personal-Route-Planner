@@ -92,3 +92,7 @@ func ResponseRegisterFailed() *Response {
 func ResponseRegisterSuccess() *Response {
 	return NewResponse(http.StatusOK, RegisterSuccess)
 }
+
+func ResponseRegisterSameName() *Response {
+	return NewResponse(http.StatusOK, RegisterSameName)
+}

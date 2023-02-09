@@ -16,15 +16,35 @@ import (
 
 type HomeController struct {
 	homeService *service.HomeService
+	userService *service.UserService
 }
 
 func NewHomeRouter() *HomeController {
-	return &HomeController{homeService: service.NewHomeService()}
+	return &HomeController{homeService: service.NewHomeService(), userService: service.NewUserService()}
+}
+
+func (h *HomeController) FindName(name string) int {
+	can, err := h.userService.FindName(name)
+	if err != nil {
+		return -1
+	}
+	if can == false {
+		return 0
+	}
+	return 1
 }
 
 func (h *HomeController) RegisterUser(ctx *gin.Context) *response.Response {
 	var user model.User
 	ctx.ShouldBind(&user)
+	same := h.FindName(user.Name)
+	fmt.Println(same)
+	switch same {
+	case -1:
+		return response.ResponseQueryFailed()
+	case 0:
+		return response.ResponseRegisterSameName()
+	}
 	DataArr := strings.Split(user.Avatar, ",")
 	imgBase64 := DataArr[1]
 	imgs, err := base64.StdEncoding.DecodeString(imgBase64)
@@ -45,7 +65,7 @@ func (h *HomeController) RegisterUser(ctx *gin.Context) *response.Response {
 	w.Flush()
 	defer file.Close()
 	user.Avatar = "http://localhost:8080/images/" + imgname
-	fmt.Println(imgname)
+	//fmt.Println(imgname)
 	user.CreateTime = time.Now()
 	//fmt.Println(user)
 	if user.Avatar == "" || user.Email == "" || user.Name == "" {

@@ -20,3 +20,7 @@ func (u *UserService) CheckUser(name string, password string) (*model.User, erro
 func (u *UserService) InsertComment(comment model.Comment) error {
 	return u.userDao.InsertComment(comment)
 }
+
+func (u *UserService) FindName(name string) (bool, error) {
+	return u.userDao.FindName(name)
+}

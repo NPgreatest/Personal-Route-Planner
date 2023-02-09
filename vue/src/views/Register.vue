@@ -16,7 +16,7 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password2">
-        <el-input type="password2" v-model="registerForm.password2" placeholder="请重复密码" >
+        <el-input type="password" v-model="registerForm.password2" placeholder="请重复密码" >
         </el-input>
       </el-form-item>
       <el-form-item prop="mail">
@@ -88,7 +88,7 @@ export default {
 
           }
           const {data: res} = await this.$axios.post("/home/register",forms);
-          if (res.status==202 ){
+          if (res.status==202 ||res.status==203){
             this.$message.error(res.message);
             return false;
           }
