@@ -65,9 +65,7 @@ func (h *HomeController) RegisterUser(ctx *gin.Context) *response.Response {
 	w.Flush()
 	defer file.Close()
 	user.Avatar = "http://localhost:8080/images/" + imgname
-	//fmt.Println(imgname)
 	user.CreateTime = time.Now()
-	//fmt.Println(user)
 	if user.Avatar == "" || user.Email == "" || user.Name == "" {
 		return response.ResponseRegisterFailed()
 	}
@@ -77,5 +75,4 @@ func (h *HomeController) RegisterUser(ctx *gin.Context) *response.Response {
 		return response.ResponseRegisterFailed()
 	}
 	return response.ResponseRegisterSuccess()
-	//return response.ResponseRegisterSuccess()
 }
