@@ -7,16 +7,19 @@ import (
 	"Personal-Route-Planner/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"time"
 )
 
 type UserController struct {
-	userService *service.UserService
+	userService   *service.UserService
+	ratingService *service.RatingService
 }
 
 func NewUserRouter() *UserController {
-	return &UserController{userService: service.NewUserService()}
+	return &UserController{userService: service.NewUserService(),
+		ratingService: service.NewRatingService()}
 }
 
 func (u *UserController) UserLogin(ctx *gin.Context) *response.Response {
@@ -59,6 +62,27 @@ func (u *UserController) UserComment(ctx *gin.Context) *response.Response {
 	return response.ResponseCommentSuccess()
 }
 
+func (u *UserController) UserRating(ctx *gin.Context) *response.Response {
+	var rate model.Rating
+	err := ctx.ShouldBindBodyWith(&rate, binding.JSON)
+	if err != nil {
+		fmt.Println(err)
+		return response.ResponseRatingFailed()
+	}
+	name, _ := utils.VerifyToken(ctx.GetHeader("Authorization"))
+	if err != nil {
+		fmt.Println(err)
+		return response.ResponseRatingFailed()
+	}
+	rate.Name = name
+	fmt.Println(rate)
+	err = u.ratingService.Rating(rate)
+	if err != nil {
+		fmt.Println(err)
+		return response.ResponseRatingFailed()
+	}
+	return response.ResponseRatingSuccess()
+}
 func LoginAuthenticationMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")

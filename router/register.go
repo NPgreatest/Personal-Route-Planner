@@ -32,5 +32,6 @@ func registerUserRouters(engine *gin.Engine) {
 	UserGroup.Use(controller.LoginAuthenticationMiddleware())
 	{
 		UserGroup.POST("/comment", Decorate(userRouter.UserComment))
+		UserGroup.POST("/rate", Decorate(userRouter.UserRating))
 	}
 }

@@ -12,6 +12,8 @@ const (
 	RegisterFailed
 	RegisterSameName
 	RegisterSuccess
+	RatingFailed
+	RatingSuccess
 
 	Unauthorized = iota + 294
 
@@ -37,4 +39,6 @@ var MessageForCode = map[uint32]string{
 	RegisterFailed:   "注册失败",
 	RegisterSameName: "用户名已注册",
 	RegisterSuccess:  "注册成功",
+	RatingFailed:     "评分失败",
+	RatingSuccess:    "评分成功",
 }

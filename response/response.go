@@ -96,3 +96,11 @@ func ResponseRegisterSuccess() *Response {
 func ResponseRegisterSameName() *Response {
 	return NewResponse(http.StatusOK, RegisterSameName)
 }
+
+func ResponseRatingSuccess() *Response {
+	return NewResponse(http.StatusOK, RatingSuccess)
+}
+
+func ResponseRatingFailed() *Response {
+	return NewResponse(http.StatusOK, RatingFailed)
+}
