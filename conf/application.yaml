@@ -4,7 +4,7 @@ server:
   imagePath: "./"
   imageBaseUrl: "http://localhost:8080"
   WebIP: "20.89.130.136"
-#  WebIP: "20.89.130.136"
+#  WebIP: "localhost"
 
 mysql:
 #  dataSourceName: "root:root@tcp(godockerDB)/route_planner?charset=utf8mb4&parseTime=true&loc=Local"

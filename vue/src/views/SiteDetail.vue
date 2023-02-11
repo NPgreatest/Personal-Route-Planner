@@ -28,6 +28,7 @@
           <div class="background">
             <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
           </div>
+          <el-link  :href="site.website"  type="success" class="link">官方网址</el-link>
           <div class="grid-content ep-bg-purple" />
         </el-col>
 
@@ -385,7 +386,10 @@ export default {
   height: auto;
 
 }
-
+.link{
+  left: 50px;
+  font: 2em/1.5 Tahoma,Helvetica,Arial,'Times New Roman',sans-serif !important;
+}
 
 
 .rights {

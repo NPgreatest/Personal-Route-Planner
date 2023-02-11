@@ -17,6 +17,6 @@ func (r *RatingService) Rating(rate model.Rating) error {
 	return r.ratingDao.Rating(rate)
 }
 
-func (r *RatingService) CheckRating(name string) (rate model.Rating, err error) {
+func (r *RatingService) CheckRating(name string) (rate string, err error) {
 	return r.ratingDao.CheckRating(name)
 }

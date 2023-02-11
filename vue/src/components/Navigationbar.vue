@@ -3,6 +3,7 @@
 
     <div class="navi-bar-center">
       <p class="title">{{ '欢迎!' }}  {{userName}}</p>
+      <el-button v-if="stat=='已登录'" @click="info" class="title3" type="text" >(个人信息)</el-button>
       <el-button v-if="stat=='已登录'" @click="last" class="title2" type="text" >(退出)</el-button>
       <div class="navi-bar-item-group">
         <i @click="fullscreen" class="iconfont icon-quanpingmu fullscreen"></i>
@@ -48,6 +49,9 @@ export default {
       window.sessionStorage.clear()
       location.reload()
     },
+    info(){
+      this.$router.push("/info")
+    }
   },
 
   created() {
@@ -168,6 +172,19 @@ li {
   user-select: none;
 }
 
+.title3 {
+  //float: left;
+  line-height: 2.5;
+  text-align: center;
+  font-size: 24px;
+  align-items: center;
+  margin: -15px 0 0 10px;
+  background: -webkit-linear-gradient(45deg, #bb165b, #dc1d1d, #ea2449, #dc1d1d,#bed5f5);
+  -webkit-background-clip: text;
+  font-weight: bolder;
+  color: transparent;
+  user-select: none;
+}
 .navi-bar {
   z-index: 999;
   width: 100%;

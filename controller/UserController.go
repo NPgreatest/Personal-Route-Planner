@@ -5,6 +5,7 @@ import (
 	"Personal-Route-Planner/model"
 	"Personal-Route-Planner/response"
 	"Personal-Route-Planner/utils"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -83,6 +84,22 @@ func (u *UserController) UserRating(ctx *gin.Context) *response.Response {
 	}
 	return response.ResponseRatingSuccess()
 }
+func (u *UserController) UserGetRate(ctx *gin.Context) *response.Response {
+	name, _ := utils.VerifyToken(ctx.GetHeader("Authorization"))
+	var res string
+	var err error
+	if res, err = u.ratingService.CheckRating(name); err != nil {
+		return response.ResponseQueryFailed()
+	}
+	var rate model.Rating
+	err = json.Unmarshal([]byte(res), &rate)
+	if err != nil {
+		fmt.Println("反序列化错误 err=%v\n", err)
+		return response.ResponseQueryFailed()
+	}
+	return response.ResponseQuerySuccess(rate)
+}
+
 func LoginAuthenticationMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")

@@ -1,7 +1,7 @@
 package model
 
 type Rating struct {
-	Name string
+	Name string  `json:"name" binding:"required"`
 	Rate []Rates `json:"rates" binding:"dive"`
 }
 
