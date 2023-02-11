@@ -3,6 +3,7 @@ server:
   port: 8080
   imagePath: "./"
   imageBaseUrl: "http://localhost:8080"
+  WebIP: "http://20.89.130.136/"
 mysql:
   dataSourceName: "root:root@tcp(godockerDB)/route_planner?charset=utf8mb4&parseTime=true&loc=Local"
   maxOpenConns: 20     # 连接池最大连接数

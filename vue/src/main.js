@@ -15,7 +15,7 @@ Vue.prototype.$echarts = echarts;
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 
-axios.defaults.baseURL="http://localhost:8082"
+axios.defaults.baseURL="/api";
 Vue.component('bubbles-effect', bubbles);
 
 

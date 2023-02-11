@@ -14,7 +14,7 @@ func registerHomeRouters(engine *gin.Engine) {
 	homeRouter := controller.NewHomeRouter()
 	siteRouter := controller.NewSiteRouter()
 	tagRouter := controller.NewTagRouter()
-	homeGroup := engine.Group("/home")
+	homeGroup := engine.Group("/api/home")
 	{
 		homeGroup.GET("/getcomments", Decorate(siteRouter.GetComments))
 		homeGroup.POST("/register", Decorate(homeRouter.RegisterUser))
@@ -27,8 +27,8 @@ func registerHomeRouters(engine *gin.Engine) {
 
 func registerUserRouters(engine *gin.Engine) {
 	userRouter := controller.NewUserRouter()
-	engine.POST("/login", Decorate(userRouter.UserLogin))
-	UserGroup := engine.Group("/user")
+	engine.POST("/api/login", Decorate(userRouter.UserLogin))
+	UserGroup := engine.Group("/api/user")
 	UserGroup.Use(controller.LoginAuthenticationMiddleware())
 	{
 		UserGroup.POST("/comment", Decorate(userRouter.UserComment))

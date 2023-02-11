@@ -9,8 +9,8 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
-#    volumes:
-#      - ./images:/app/images
+    volumes:
+      - ./images:/app/images
   mysql:
     build: ./sql
     container_name: godockerDB
@@ -19,21 +19,21 @@ services:
       webapp:
     ports:
       - "3307:3306"
-#    volumes:
-#      - ~/route_planner/mysql/data:var/lib/mysql
-#  nginx:
-#    image: nginx
-#    restart: always
-#    networks:
-#      webapp:
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ~/route_planner/nginx/html/:/usr/share/nginx/html/
-#      - ~/route_planner/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-#      - ~/route_planner/nginx/conf/nginx_gzip.conf:/etc/nginx/nginx_gzip.conf
-#      - ~/route_planner/images/:/usr/share/nginx/images/
-#    privileged: true
+  nginx:
+    image: nginx
+    container_name: test-nginx
+    restart: always
+    networks:
+      webapp:
+    ports:
+      - "80:80"
+    volumes:
+      - ./vue/dist/:/usr/share/nginx/html/
+      - ./vue/nginx.conf:/etc/nginx/nginx.conf
+#      - ./vue/conf.d:/etc/nginx/conf.d
+
+#      - ./vue/images/:/usr/share/nginx/images/
+    privileged: true
 networks:
   webapp:
     driver: bridge
