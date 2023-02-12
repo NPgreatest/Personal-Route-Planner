@@ -24,3 +24,11 @@ func (u *UserService) InsertComment(comment model.Comment) error {
 func (u *UserService) FindName(name string) (bool, error) {
 	return u.userDao.FindName(name)
 }
+
+func (u *UserService) UserInfo(name string) (model.User, error) {
+	return u.userDao.UserInfo(name)
+}
+
+func (u *UserService) UpdateUserInfo(user model.User) error {
+	return u.userDao.UpdateUserInfo(user)
+}

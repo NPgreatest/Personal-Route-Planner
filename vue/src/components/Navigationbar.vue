@@ -50,7 +50,7 @@ export default {
       location.reload()
     },
     info(){
-      this.$router.push("/info")
+      this.$router.push("/userinfo")
     }
   },
 

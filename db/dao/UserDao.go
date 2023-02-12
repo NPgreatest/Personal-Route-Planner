@@ -15,6 +15,8 @@ func NewUserDao() *UserDao {
 			`SELECT * FROM users WHERE name = ? AND password = ?;`,
 			`INSERT INTO comment (cid, name, sid, content, likes, time)VALUES (?, ?, ?, ?, ?, ? );`,
 			`SELECT count(*) FROM users WHERE users.name=?`,
+			`SELECT * FROM users WHERE name = ?`,
+			`update users set password=?,email=?,avatar=? where users.name=?;`,
 		},
 	}
 }
@@ -38,4 +40,18 @@ func (u *UserDao) FindName(name string) (bool, error) {
 	}
 	fmt.Println(res)
 	return res == 0, err
+}
+
+func (u *UserDao) UserInfo(name string) (model.User, error) {
+	var user model.User
+	err := sqldb.Get(&user, u.sql[3], name)
+	return user, err
+}
+
+func (u *UserDao) UpdateUserInfo(user model.User) error {
+	_, err := sqldb.Exec(u.sql[4], user.Password, user.Email, user.Avatar, user.Name)
+	if err != nil {
+		return err
+	}
+	return nil
 }

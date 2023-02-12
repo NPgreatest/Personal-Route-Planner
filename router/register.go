@@ -34,5 +34,7 @@ func registerUserRouters(engine *gin.Engine) {
 		UserGroup.POST("/comment", Decorate(userRouter.UserComment))
 		UserGroup.POST("/rate", Decorate(userRouter.UserRating))
 		UserGroup.GET("/getrate", Decorate(userRouter.UserGetRate))
+		UserGroup.GET("/getinfo", Decorate(userRouter.UserInfo))
+		UserGroup.POST("/update", Decorate(userRouter.UpdateUserInfo))
 	}
 }

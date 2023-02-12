@@ -1,9 +1,14 @@
 package utils
 
 import (
+	"bufio"
+	"encoding/base64"
 	"fmt"
 	"github.com/bwmarrin/snowflake"
 	"github.com/dgrijalva/jwt-go"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -61,4 +66,27 @@ func GenerateId(x int64) int64 {
 		return 0
 	}
 	return node.Generate().Int64()
+}
+
+func WriteImages(data string) (string, error) {
+	DataArr := strings.Split(data, ",")
+	imgBase64 := DataArr[1]
+	imgs, err := base64.StdEncoding.DecodeString(imgBase64)
+	if err != nil {
+		return "", err
+	}
+	timenow := time.Now().Unix()
+	imgname := strconv.FormatInt(timenow, 10) + ".jpg"
+	file, err := os.OpenFile("./images/"+imgname, os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return "", err
+	}
+	w := bufio.NewWriter(file)
+	_, err = w.WriteString(string(imgs))
+	if err != nil {
+		return "", err
+	}
+	w.Flush()
+	defer file.Close()
+	return "http://localhost:8080/images/" + imgname, nil
 }

@@ -10,6 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -98,6 +100,43 @@ func (u *UserController) UserGetRate(ctx *gin.Context) *response.Response {
 		return response.ResponseQueryFailed()
 	}
 	return response.ResponseQuerySuccess(rate)
+}
+
+func (u *UserController) UserInfo(ctx *gin.Context) *response.Response {
+	name, _ := utils.VerifyToken(ctx.GetHeader("Authorization"))
+	res, err := u.userService.UserInfo(name)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	return response.ResponseQuerySuccess(res)
+}
+
+func (u *UserController) UpdateUserInfo(ctx *gin.Context) *response.Response {
+	var user model.User
+	ctx.ShouldBind(&user)
+	t, err := u.userService.UserInfo(user.Name)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	if user.Password == "" {
+		user.Password = t.Password
+	}
+	if user.Avatar == "" {
+		user.Avatar = t.Avatar
+		u.userService.UpdateUserInfo(user)
+		return response.ResponseOperateSuccess()
+	}
+	ava := strings.Split(t.Avatar, "/")
+	err = os.Remove("./images/" + ava[4])
+	if err != nil {
+		fmt.Println(err)
+	}
+	user.Avatar, err = utils.WriteImages(user.Avatar)
+	u.userService.UpdateUserInfo(user)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	return response.ResponseRegisterSuccess()
 }
 
 func LoginAuthenticationMiddleware() gin.HandlerFunc {

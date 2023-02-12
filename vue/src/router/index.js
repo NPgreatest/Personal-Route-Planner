@@ -6,6 +6,8 @@ import Home from "../views/Home.vue"
 import Register from "../views/Register.vue"
 import SiteDetail from "../views/SiteDetail.vue";
 import Tags from "../views/Tags.vue"
+import Info from "../views/users/Info.vue";
+import UserInfo from "../views/users/infos/UserInfo.vue";
 
 Vue.use(VueRouter);
 
@@ -32,6 +34,15 @@ const routes=[
         path:"/register",
         name:"Register",
         component:Register,
+    },
+    {
+      path: "/info",
+      name:"Info",
+      component: Info,
+        meta:{auth: false},
+        children:[
+            {path: "/userinfo",component: UserInfo,meta: {auth: true}}
+        ]
     },
 ];
 
