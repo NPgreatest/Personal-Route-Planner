@@ -21,6 +21,6 @@ func (r *RatingService) CheckRating(name string) (rate string, err error) {
 	return r.ratingDao.CheckRating(name)
 }
 
-func (r *RatingService) GetRecommand(sid int) (sites []*model.Sites, err error) {
-	return r.ratingDao.GetRecommand(sid)
+func (r *RatingService) GetRecommand(name string, sid int) (sites []model.Sites, err error) {
+	return r.ratingDao.GetRecommand(name, sid)
 }

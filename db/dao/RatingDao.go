@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	matrix "github.com/skelterjohn/go.matrix"
+	"sort"
+	"strconv"
 )
 
 type RatingDao struct {
@@ -21,6 +23,7 @@ func NewRatingDao() *RatingDao {
 			`SELECT rate FROM rating WHERE name=?;`,
 			`SELECT rate FROM rating;`,
 			`SELECT count(*) FROM sites;`,
+			`SELECT * FROM sites WHERE sid=?;`,
 		},
 	}
 }
@@ -76,16 +79,56 @@ func (r *RatingDao) MakeRecommandMatrix() (matrix *matrix.DenseMatrix, err error
 			}
 		}
 	}
-	prefs := Algorithm.MakeRatingMatrix(tar, len(smap), number)
+	prefs := Algorithm.MakeRatingMatrix(tar, number, len(smap))
 	return prefs, nil
 }
 
-func (r *RatingDao) GetRecommand(sid int) (sites []*model.Sites, err error) {
+func (r *RatingDao) GetRecommand(name string, sid int) (sites []model.Sites, err error) {
+	res := make(map[string]float64) //每个景点对应的推荐度
+	products := make([]string, 0)
 	mat, err := r.MakeRecommandMatrix()
+	number := make([]float64, 0)
+	n, err := r.GetSitesNumber()
 	if err != nil {
 		return nil, err
 	}
+	for i := 0; i < n; i++ {
+		number = append(number, 1) //用户对于每个景点的偏好 之后会修改
+		products = append(products, strconv.Itoa(i+1))
+	}
 	fmt.Println(mat)
+	prods, scores, err := Algorithm.GetRecommendations(mat, sid, products)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for k := 0; k < len(prods); k++ {
+		res[prods[k]] += scores[k] * number[k]
+	}
+	tmap := make(map[float64]int, 0)
+	vals := make([]float64, 0)
+	sits := make([]int, 0)
+	for k, v := range res {
+		vals = append(vals, v)
+		tt, err := strconv.Atoi(k)
+		if err != nil {
+			return nil, err
+		}
+		tmap[v] += tt
+	}
+	sort.Sort(sort.Reverse(sort.Float64Slice(vals)))
+	for _, val := range vals {
+		sits = append(sits, tmap[val])
+	}
+	for i := 0; i < len(vals); i++ {
+		var sit model.Sites
+		sqldb.Get(&sit, r.sql[5], sits[i])
+		sites = append(sites, sit)
+	}
+	//fmt.Println(res)
+	//for _, v := range sites {
+	//	fmt.Println(v.Sid)
+	//}
 	return
 }
 

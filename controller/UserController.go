@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -103,8 +104,16 @@ func (u *UserController) UserGetRate(ctx *gin.Context) *response.Response {
 }
 
 func (u *UserController) GetRecommand(ctx *gin.Context) *response.Response {
-	_, err := u.ratingService.GetRecommand(1)
-	return response.ResponseQuerySuccess(err)
+	con, err := strconv.Atoi(ctx.Query("sid"))
+	if err != nil {
+		fmt.Println("siteid wrong")
+		return response.ResponseQueryFailed()
+	}
+	res, err := u.ratingService.GetRecommand("admin", con)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	return response.ResponseQuerySuccess(res)
 }
 
 func (u *UserController) UserInfo(ctx *gin.Context) *response.Response {

@@ -16,7 +16,6 @@ import (
 )
 
 func main() {
-	utils.GetSites()
 	utils.GenerateId(1)
 	engine := gin.New()
 	//gin.SetMode(gin.ReleaseMode)
