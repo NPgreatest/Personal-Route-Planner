@@ -20,3 +20,7 @@ func (r *RatingService) Rating(rate model.Rating) error {
 func (r *RatingService) CheckRating(name string) (rate string, err error) {
 	return r.ratingDao.CheckRating(name)
 }
+
+func (r *RatingService) GetRecommand(sid int) (sites []*model.Sites, err error) {
+	return r.ratingDao.GetRecommand(sid)
+}

@@ -36,5 +36,6 @@ func registerUserRouters(engine *gin.Engine) {
 		UserGroup.GET("/getrate", Decorate(userRouter.UserGetRate))
 		UserGroup.GET("/getinfo", Decorate(userRouter.UserInfo))
 		UserGroup.POST("/update", Decorate(userRouter.UpdateUserInfo))
+		UserGroup.GET("/getrecommand", Decorate(userRouter.GetRecommand))
 	}
 }

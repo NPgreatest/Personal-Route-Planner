@@ -102,6 +102,11 @@ func (u *UserController) UserGetRate(ctx *gin.Context) *response.Response {
 	return response.ResponseQuerySuccess(rate)
 }
 
+func (u *UserController) GetRecommand(ctx *gin.Context) *response.Response {
+	_, err := u.ratingService.GetRecommand(1)
+	return response.ResponseQuerySuccess(err)
+}
+
 func (u *UserController) UserInfo(ctx *gin.Context) *response.Response {
 	name, _ := utils.VerifyToken(ctx.GetHeader("Authorization"))
 	res, err := u.userService.UserInfo(name)
