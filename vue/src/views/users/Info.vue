@@ -15,11 +15,11 @@
 
     <el-container>
       <!-- 侧边区域 -->
-      <el-aside :width="isCollapse ? '165px' : '300px'">
+      <el-aside :width="isCollapse ? '60px' : '230px'"  >
         <div class="toggle-button" @click="toggleCollapse">|||</div>
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409eff"
                  unique-opened :collapse="isCollapse" :collapse-transition="false" router
-                 :default-active="activePath">
+                 :default-active="activePath" >
 
           <el-submenu :index="menu.id" v-for="(menu, i1) in menus" :key="menu.id">
             <!-- 一级菜单的模板区域 -->
@@ -196,7 +196,7 @@ export default {
 .el-menu {
   background-color: #1B1C1D;
   opacity: 1;
-
+  height:100vh;
   font-weight: 500;
   font-size: 50px;
 }
