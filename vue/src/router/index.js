@@ -9,6 +9,7 @@ import Tags from "../views/Tags.vue"
 import Info from "../views/users/Info.vue";
 import UserInfo from "../views/users/infos/UserInfo.vue";
 import UserRate from "../views/users/infos/Rating.vue";
+import Plan from "../views/Plan.vue";
 import {InUseAttributeError} from "core-js/internals/dom-exception-constants";
 Vue.use(VueRouter);
 
@@ -23,7 +24,8 @@ const routes=[
         children:[
             {path:"/home",component:Home,meta:{auth:false}},
             {path: "sitedetails",component: SiteDetail,meta: {auth: false}},
-            {path:"tags",component: Tags,meta: {auth: false}}
+            {path:"tags",component: Tags,meta: {auth: false}},
+            {path:"plan",component: Plan,meta: {auth: false}}
         ]
     },
     {

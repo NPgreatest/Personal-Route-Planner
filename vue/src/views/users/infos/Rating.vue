@@ -87,12 +87,6 @@ export default {
     this.getAllTags();
   },
   methods: {
-    clear: function() {
-      this.queryInfo.blogTitle = "123";
-      this.queryInfo.typeId = 0;
-      this.queryInfo.recommended = false;
-      this.selectedType = "";
-    },
     changeSites(value){
       this.sid=value
       let obj = {};

@@ -13,7 +13,7 @@
           <li><NaviItem :activeRoute="activeRoute" index-name="问答"  rout="/types"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="景点展示" rout="/sitedetails?id=1"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="景点推荐" rout="/tags"></NaviItem></li>
-          <li><NaviItem :activeRoute="activeRoute" index-name="路线规划"  rout="/essay"></NaviItem></li>
+          <li><NaviItem :activeRoute="activeRoute" index-name="路线规划"  rout="/plan"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="留言板" rout="/msgBoard"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="关于"  rout="/about"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="登录" rout="/login"   ></NaviItem></li>

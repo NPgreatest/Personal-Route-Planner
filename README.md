@@ -35,9 +35,9 @@ npm run serve
 Then you can access website in http://localhost:8080/
 
 # 3. TO-DO LIST
-
+- [x] recommend algorithm
 - [ ] connect with 高德API
-- [ ] recommend algorithm
+- [ ] connect with chatgpt-ai
 - [ ] redis server
 - [ ] change to GORM framework
 
