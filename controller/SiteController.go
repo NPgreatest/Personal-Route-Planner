@@ -30,12 +30,7 @@ func (s *SiteController) GetComments(ctx *gin.Context) *response.Response {
 }
 
 func (s *SiteController) FindAllSites(ctx *gin.Context) *response.Response {
-	con, err := strconv.Atoi(ctx.Query("tagid"))
-	if err != nil {
-		fmt.Println("siteid wrong")
-		return response.ResponseQueryFailed()
-	}
-	res, err := s.siteService.FindAllSites(con)
+	res, err := s.siteService.FindAllSites()
 	if err != nil {
 		fmt.Println(err)
 		return response.ResponseQueryFailed()

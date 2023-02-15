@@ -12,7 +12,7 @@ type SiteDao struct {
 func NewSiteDao() *SiteDao {
 	return &SiteDao{sql: []string{
 		`SELECT * FROM comment WHERE sid=?`,
-		`SELECT * FROM sites WHERE sid IN(SELECT sid FROM sites_tags WHERE tagid=?);`,
+		`SELECT * FROM sites;`,
 		`SELECT * FROM sites WHERE sid=?;`,
 		`SELECT * FROM price WHERE sid=?;`,
 		`SELECT avatar FROM users RIGHT JOIN (SELECT name FROM comment WHERE sid=?) a ON a.name=users.name;`,
@@ -35,8 +35,8 @@ func (h *SiteDao) FindAllComment(sid int) (comments []model.Comment, err error) 
 	return
 }
 
-func (h *SiteDao) FindAllSites(tag int) (sites []model.Sites, err error) {
-	err = sqldb.Select(&sites, h.sql[1], tag)
+func (h *SiteDao) FindAllSites() (sites []model.Sites, err error) {
+	err = sqldb.Select(&sites, h.sql[1])
 	if err != nil {
 		return nil, err
 	}
