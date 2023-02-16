@@ -45,6 +45,7 @@ import ChatWindow from "../views/Chat.vue";
  // import { getFriend } from "../utils/utils.js"
 export default {
   name: "ChatHome",
+  props:['tags'],
   components: {
     PersonCard,
     ChatWindow,
@@ -60,25 +61,50 @@ export default {
         {sid:3,
           pic:require("../static/logo.png")}
       ],
-      showChatWindow: true,
+      showChatWindow: false,
       chatWindowInfo: {},
     };
+  },
+  watch:{
+    tags:{
+      handler(newValue,oldValue){
+        this.updateSites(newValue);
+      }
+    }
   },
   mounted() {
     this.getSites();
   },
   methods: {
-    getSites:async function(){
-      const {data: res} = await this.$axios.get("/home/sitedetails");
+    updateSites:async function(v){
+      const {data: res} = await this.$axios.get("/home/sitesbytags", {params: {tagid: v}});
       if(res.status === 1) {
-        this.site = res.data.length > 0 ? res.data[0] : this.site;
+        this.personList = res.data.length > 0 ? res.data[0] : this.personList;
+        for(var i=0;i<this.personList.length;i++){
+          this.personList[i].short=this.personList[i].description.substr(0,11)+"..."
+        }
+      } else {
+        this.$message.error("获取景点失败，请重试")
+        return
       }
+    },
+    getSites:async function(){
+        const {data: res} = await this.$axios.get("/home/allsites");
+        if(res.status === 1) {
+          this.personList = res.data.length > 0 ? res.data[0] : this.personList;
+          for(var i=0;i<this.personList.length;i++){
+            this.personList[i].short=this.personList[i].description.substr(0,11)+"..."
+          }
+        }else{
+          this.$message.error("获取景点失败")
+        }
+
     },
     clickPerson(info) {
       this.showChatWindow = true;
       this.chatWindowInfo = info;
       this.personInfo = info;
-      this.pcCurrent = info.id;
+      this.pcCurrent = info.sid;
     },
     personCardSort(id) {
       if (id !== this.personList[0].id) {
@@ -103,13 +129,13 @@ export default {
   // margin-top: 20px;
   display: flex;
   .chatLeft {
-    width: 280px;
+    width: 320px;
     .title {
       color: #fff;
       padding-left: 10px;
     }
     .online-person {
-      margin-top: 100px;
+      margin-top: 50px;
       .onlin-text {
         padding-left: 10px;
         color: rgb(176, 178, 189);

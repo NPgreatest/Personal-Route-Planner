@@ -3,10 +3,10 @@
   <div class="home">
     <el-container height="100%">
       <el-aside width="120px">
-        <Nav></Nav>
+        <Nav :final_tag="gettag"></Nav>
       </el-aside>
       <el-main>
-        <chat-home></chat-home>
+        <chat-home v-bind:tags="tag"></chat-home>
       </el-main>
     </el-container>
   </div>
@@ -24,7 +24,13 @@ export default {
   },
   data(){
     return{
+      tag:1,
       imgSrc:require('../static/background.jpg')
+    }
+  },
+  methods:{
+    gettag(tag){
+      this.tag=tag
     }
   }
 };

@@ -157,6 +157,7 @@ func (u *UserController) UpdateUserInfo(ctx *gin.Context) *response.Response {
 }
 func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 	sid, err := strconv.Atoi(ctx.Query("sid"))
+	str := ctx.Query("detail")
 	if err != nil {
 		fmt.Println("siteid wrong")
 		return response.ResponseQueryFailed()
@@ -165,7 +166,7 @@ func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
-	res := ChatGPT.Callgpt("请介绍旅游景点" + sname)
+	res := ChatGPT.Callgpt("请介绍旅游景点" + sname + "\n" + str)
 	return response.ResponseQuerySuccess(res)
 }
 

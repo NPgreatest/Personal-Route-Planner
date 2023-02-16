@@ -23,7 +23,12 @@ export default {
   data() {
     return {
       emojiList: [
-        require("../static/logo.png"),
+        require("../static/thinking-face.png"),
+        require("../static/face-without-mouth.png"),
+        require("../static/money-bag.png"),
+        require("../static/pouting-face.png"),
+        require("../static/shamrock.png"),
+
       ],
     };
   },

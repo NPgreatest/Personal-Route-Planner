@@ -4,37 +4,37 @@
 
     <div class="top">
       <div class="head-pic">
-        <HeadPortrait :imgUrl="frinedInfo.headImg"></HeadPortrait>
+        <HeadPortrait :imgUrl="frinedInfo.pic"></HeadPortrait>
       </div>
       <div class="info-detail">
-        <div class="name">{{ frinedInfo.name }}</div>
-        <div class="detail">{{ frinedInfo.detail }}</div>
+        <div class="name">{{ frinedInfo.sname }}</div>
+        <div class="detail">{{ frinedInfo.description }}</div>
       </div>
-      <div class="other-fun">
-        <span class="iconfont icon-shipin" @click="video"> </span>
-        <span class="iconfont icon-gf-telephone" @click="telephone"></span>
-        <label for="docFile">
-          <span class="iconfont icon-wenjian"></span>
-        </label>
-        <label for="imgFile">
-          <span class="iconfont icon-tupian"></span>
-        </label>
-        <input
-            type="file"
-            name=""
-            id="imgFile"
-            @change="sendImg"
-            accept="image/*"
-        />
-        <input
-            type="file"
-            name=""
-            id="docFile"
-            @change="sendFile"
-            accept="application/*,text/*"
-        />
-        <!-- accept="application/*" -->
-      </div>
+<!--      <div class="other-fun">-->
+<!--        <span class="iconfont icon-shipin" @click="video"> </span>-->
+<!--        <span class="iconfont icon-gf-telephone" @click="telephone"></span>-->
+<!--        <label for="docFile">-->
+<!--          <span class="iconfont icon-wenjian"></span>-->
+<!--        </label>-->
+<!--        <label for="imgFile">-->
+<!--          <span class="iconfont icon-tupian"></span>-->
+<!--        </label>-->
+<!--        <input-->
+<!--            type="file"-->
+<!--            name=""-->
+<!--            id="imgFile"-->
+<!--            @change="sendImg"-->
+<!--            accept="image/*"-->
+<!--        />-->
+<!--        <input-->
+<!--            type="file"-->
+<!--            name=""-->
+<!--            id="docFile"-->
+<!--            @change="sendFile"-->
+<!--            accept="application/*,text/*"-->
+<!--        />-->
+<!--        &lt;!&ndash; accept="application/*" &ndash;&gt;-->
+<!--      </div>-->
     </div>
     <div class="botoom">
       <div class="chat-content" ref="chatContent">
@@ -115,7 +115,7 @@
         </div>
         <input class="inputs" v-model="inputMsg" @keyup.enter="sendText" />
         <div class="send boxinput" @click="sendText">
-<!--          <img src="@/assets/img/emoji/rocket.png" alt="" />-->
+          <img src="../static/rocket.png" alt="" />
         </div>
       </div>
     </div>
@@ -161,19 +161,7 @@ export default {
   methods: {
     //获取聊天记录
     getFriendChatMsg() {
-      // let params = {
-      //   frinedId: this.frinedInfo.id,
-      // };
-      // getChatMsg(params).then((res) => {
-      //   this.chatList = res;
-      //   this.chatList.forEach((item) => {
-      //     if (item.chatType == 2 && item.extend.imgType == 2) {
-      //       this.srcImgList.push(item.msg);
-      //     }
-      //   });
-      //   this.scrollBottom();
-      //
-      // });
+
       this.scrollBottom();
     },
     //发送信息
@@ -193,18 +181,33 @@ export default {
       this.showEmoji = !this.showEmoji;
     },
     //发送文字信息
-    sendText() {
+    sendText:async function(){
       if (this.inputMsg) {
         let chatMsg = {
-          headImg: require("../static/logo.png"),
-          name: "大毛是小白",
+          headImg: require("../static/thinking-face.png"),
+          name: "admin",
           time: "09：12 AM",
           msg: this.inputMsg,
           chatType: 0, //信息类型，0文字，1图片
           uid: "1001", //uid
         };
         this.sendMsg(chatMsg);
-        this.$emit('personCardSort', this.frinedInfo.id)
+        const {data: res} = await this.$axios.get("/user/getsitegpt",{params: {sid: this.frinedInfo.sid,detail:this.inputMsg}});
+        if(res.status === 1) {
+          var str = res.data.length > 0 ? res.data[0] : "";
+          let chatMsg2 = {
+            headImg: this.frinedInfo.pic,
+            name: "AI小助手",
+            time: new Date(),
+            msg: str,
+            chatType: 0, //信息类型，0文字，1图片
+            uid: "1002", //uid
+          };
+          this.sendMsg(chatMsg2);
+        }else{
+          this.$message.error("获取回答失败")
+        }
+
         this.inputMsg = "";
       } else {
         this.$message({
@@ -216,9 +219,9 @@ export default {
     //发送表情
     sendEmoji(msg) {
       let chatMsg = {
-        headImg: require("../static/logo.png"),
-        name: "大毛是小白",
-        time: "09：12 AM",
+        headImg: require("../static/thinking-face.png"),
+        name: "admin",
+        time: new Date(),
         msg: msg,
         chatType: 1, //信息类型，0文字，1图片
         extend: {
@@ -228,87 +231,6 @@ export default {
       };
       this.sendMsg(chatMsg);
       this.clickEmoji();
-    },
-    //发送本地图片
-    sendImg(e) {
-      let _this = this;
-      console.log(e.target.files);
-      let chatMsg = {
-        headImg: require("../static/logo.png"),
-        name: "大毛是小白",
-        time: "09：12 AM",
-        msg: "",
-        chatType: 1, //信息类型，0文字，1图片, 2文件
-        extend: {
-          imgType: 2, //(1表情，2本地图片)
-        },
-        uid: "1001",
-      };
-      let files = e.target.files[0]; //图片文件名
-      if (!e || !window.FileReader) return; // 看是否支持FileReader
-      let reader = new FileReader();
-      reader.readAsDataURL(files); // 关键一步，在这里转换的
-      reader.onloadend = function() {
-        chatMsg.msg = this.result; //赋值
-        _this.srcImgList.push(chatMsg.msg);
-      };
-      this.sendMsg(chatMsg);
-      e.target.files = null;
-    },
-    //发送文件
-    sendFile(e) {
-      let chatMsg = {
-        headImg: require("../static/logo.png"),
-        name: "大毛是小白",
-        time: "09：12 AM",
-        msg: "",
-        chatType: 2, //信息类型，0文字，1图片, 2文件
-        extend: {
-          fileType: "", //(1word，2excel，3ppt，4pdf，5zpi, 6txt)
-        },
-        uid: "1001",
-      };
-      let files = e.target.files[0]; //图片文件名
-      chatMsg.msg = files;
-      console.log(files);
-      if (files) {
-        switch (files.type) {
-          case "application/msword":
-          case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-            chatMsg.extend.fileType = 1;
-            break;
-          case "application/vnd.ms-excel":
-          case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-            chatMsg.extend.fileType = 2;
-            break;
-          case "application/vnd.ms-powerpoint":
-          case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-            chatMsg.extend.fileType = 3;
-            break;
-          case "application/pdf":
-            chatMsg.extend.fileType = 4;
-            break;
-          case "application/zip":
-          case "application/x-zip-compressed":
-            chatMsg.extend.fileType = 5;
-            break;
-          case "text/plain":
-            chatMsg.extend.fileType = 6;
-            break;
-          default:
-            chatMsg.extend.fileType = 0;
-        }
-        this.sendMsg(chatMsg);
-        e.target.files = null;
-      }
-    },
-    // 发送语音
-    telephone() {
-      this.$message("该功能还没有开发哦，敬请期待一下吧~🥳");
-    },
-    //发送视频
-    video() {
-      this.$message("该功能还没有开发哦，敬请期待一下吧~🥳");
     },
   },
 }
@@ -343,6 +265,7 @@ export default {
   color: #9e9e9e;
   font-size: 12px;
   margin-top: 2px;
+  position: absolute;
 }
 }
 .other-fun {

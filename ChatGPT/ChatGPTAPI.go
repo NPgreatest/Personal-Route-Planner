@@ -13,7 +13,7 @@ func GetResponse(client gpt3.Client, ctx context.Context, quesiton string) strin
 		Prompt: []string{
 			quesiton,
 		},
-		MaxTokens:   gpt3.IntPtr(3000),
+		MaxTokens:   gpt3.IntPtr(4000),
 		Temperature: gpt3.Float32Ptr(0),
 	}, func(resp *gpt3.CompletionResponse) {
 		res.WriteString(resp.Choices[0].Text)

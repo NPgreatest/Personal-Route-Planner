@@ -7,7 +7,7 @@
 <script>
 export default {
     props: {
-        imgUrl:{ default:require('../static/logo.png')}
+        imgUrl:{ default:require('../static/rocket.png')}
     }
 }
 </script>
