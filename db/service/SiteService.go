@@ -28,3 +28,7 @@ func (s *SiteService) FindSiteDetails(siteid int) (site model.Sites, err error) 
 func (s *SiteService) FindCommentsAvatars(siteid int) ([]string, error) {
 	return s.siteDao.FindCommentsAvatars(siteid)
 }
+
+func (s *SiteService) SiteGPT(sid int) (string, error) {
+	return s.siteDao.FindSiteName(sid)
+}

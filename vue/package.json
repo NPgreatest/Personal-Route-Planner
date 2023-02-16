@@ -20,7 +20,9 @@
     "markdown-it": "^13.0.1",
     "vue": "^2.6.14",
     "vue-canvas-effect": "^0.0.12",
-    "vue-router": "^3.5.1"
+    "vue-router": "^3.5.1",
+    "sass": "^1.56.2",
+    "sass-loader": "^13.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

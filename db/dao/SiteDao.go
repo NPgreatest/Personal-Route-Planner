@@ -16,6 +16,7 @@ func NewSiteDao() *SiteDao {
 		`SELECT * FROM sites WHERE sid=?;`,
 		`SELECT * FROM price WHERE sid=?;`,
 		`SELECT avatar FROM users RIGHT JOIN (SELECT name FROM comment WHERE sid=?) a ON a.name=users.name;`,
+		`SELECT sname FROM sites WHERE sid=?;`,
 	}}
 }
 
@@ -70,5 +71,10 @@ func (h *SiteDao) FindCommentsAvatars(siteid int) (ava []string, err error) {
 	if err != nil {
 		return nil, err
 	}
+	return
+}
+
+func (s *SiteDao) FindSiteName(sid int) (res string, err error) {
+	err = sqldb.Get(&res, s.sql[5], sid)
 	return
 }

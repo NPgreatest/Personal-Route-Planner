@@ -10,7 +10,7 @@
         <!--导航按键-->
         <ul>
           <li><NaviItem :activeRoute="activeRoute" index-name="首页"  rout="/home"></NaviItem></li>
-          <li><NaviItem :activeRoute="activeRoute" index-name="问答"  rout="/types"></NaviItem></li>
+          <li><NaviItem :activeRoute="activeRoute" index-name="问答"  rout="/chat"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="景点展示" rout="/sitedetails?id=1"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="景点推荐" rout="/tags"></NaviItem></li>
           <li><NaviItem :activeRoute="activeRoute" index-name="路线规划"  rout="/plan"></NaviItem></li>

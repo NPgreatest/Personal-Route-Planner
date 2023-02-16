@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"Personal-Route-Planner/ChatGPT"
 	"Personal-Route-Planner/db/service"
 	"Personal-Route-Planner/model"
 	"Personal-Route-Planner/response"
@@ -19,11 +20,13 @@ import (
 type UserController struct {
 	userService   *service.UserService
 	ratingService *service.RatingService
+	siteService   *service.SiteService
 }
 
 func NewUserRouter() *UserController {
 	return &UserController{userService: service.NewUserService(),
-		ratingService: service.NewRatingService()}
+		ratingService: service.NewRatingService(),
+		siteService:   service.NewSiteService()}
 }
 
 func (u *UserController) UserLogin(ctx *gin.Context) *response.Response {
@@ -151,6 +154,19 @@ func (u *UserController) UpdateUserInfo(ctx *gin.Context) *response.Response {
 		return response.ResponseQueryFailed()
 	}
 	return response.ResponseRegisterSuccess()
+}
+func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
+	sid, err := strconv.Atoi(ctx.Query("sid"))
+	if err != nil {
+		fmt.Println("siteid wrong")
+		return response.ResponseQueryFailed()
+	}
+	sname, err := u.siteService.SiteGPT(sid)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	res := ChatGPT.Callgpt("请介绍旅游景点" + sname)
+	return response.ResponseQuerySuccess(res)
 }
 
 func LoginAuthenticationMiddleware() gin.HandlerFunc {
