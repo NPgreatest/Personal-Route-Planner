@@ -43,7 +43,7 @@ func (r *RatingDao) MakeRecommandMatrix() (matrix *matrix.DenseMatrix, err error
 	//用Mysql的游标将rates库中所有节点取到js[]数组中，方便后面unmarshall
 	c := 0
 	for rows.Next() {
-		if c > 19 {
+		if c > 34 {
 			break
 		}
 		var t string
