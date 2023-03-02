@@ -85,6 +85,7 @@ func (r *RatingDao) MakeRecommandMatrix() (matrix *matrix.DenseMatrix, err error
 		}
 	}
 	prefs := Algorithm.MakeRatingMatrix(tar, number, len(smap))
+	fmt.Println(prefs)
 	return prefs, nil
 }
 

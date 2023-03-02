@@ -34,7 +34,7 @@ func (NullWriter) Write([]byte) (int, error) { return 0, nil }
 
 func Callgpt(q string) string {
 	log.SetOutput(new(NullWriter))
-	apiKey := "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"
+	apiKey := ""
 	if apiKey == "" {
 		panic("Missing API KEY")
 	}

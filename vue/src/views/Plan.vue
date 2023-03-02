@@ -4,8 +4,23 @@
     <img :src="imgSrc" width="100%" height="100%" alt="" />
   </div>
 
+
+
+
 <div class="elForm">
+
+
+
   <el-form ref="form" :model="form" label-width="220px" style="margin: auto">
+    <el-row  class="tag-area" :gutter="20" style="margin: auto; display: flex;flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px "    >
+    <li :key="item.tagid" v-for="item in tags">
+      <el-col :span="4">
+        <el-button type="success" v-if="selectid==item.tagid" @click="selected(item.tagid)"  class="buttons" >{{item.name}}</el-button>
+        <el-button type="primary" v-if="selectid!=item.tagid" @click="selected(item.tagid)"  class="buttons" >{{item.name}}</el-button>
+      </el-col>
+    </li>
+    </el-row>
+
     <el-form-item  >
       <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 选择第一个景点： </span></span>
       <el-select v-model="a1" @change="changeSite1" placeholder="选择感兴趣的景点" value-key="id"  :disabled="dis1">
@@ -66,9 +81,31 @@ export default {
       a1:"",
       a2:"",
       a3:"",
+      selectid:0,
       dis1:false,
       dis2:false,
       dis3:false,
+      tags: [{
+        id: 1,
+        name: "前端",
+        count: 5
+      },
+        {
+          id: 2,
+          name: "后端",
+          count: 8
+        },
+        {
+          id: 3,
+          name: "SpringBoot",
+          count: 5
+        },
+        {
+          id:4,
+          name:"123",
+          count:5
+        }
+      ],
       array1:[
         {sid:1,
           sname:"景点",
@@ -102,7 +139,14 @@ export default {
     this.getFirstSites()
   },
   methods:{
+    selected(id){
+      this.selectid=id;
+    },
     getFirstSites:async function() {
+      const {data: res2} = await this.$axios.get("/home/alltags");
+      if(res2.status === 1) {
+        this.tags = res2.data.length > 0 ? res2.data[0] : this.tags;
+      }
       const {data: res} = await this.$axios.get("/home/allsites");
       if (res.status === 1) {
         this.sites = res.data.length > 0 ? res.data[0] : this.site;
@@ -195,5 +239,19 @@ export default {
   justify-content: center;
   position: absolute;
   z-index: 1;
+}
+.tag-area {
+  width: 840px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.tag-area li {
+  list-style: none;
+  float: left;
+}
+.buttons:hover {
+  transform:  scale(1.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 </style>
