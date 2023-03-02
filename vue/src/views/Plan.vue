@@ -50,7 +50,7 @@
     <b-avatar  v-for="item in select"   class="comment-avatar" :src="item.pic" size="15rem" ></b-avatar>
     <el-form-item>
       <el-button type="primary" @click="repick">重置</el-button>
-      <el-button type="success" >完成</el-button>
+      <el-button type="success" @click="finish">完成</el-button>
     </el-form-item>
 
 
@@ -141,6 +141,9 @@ export default {
   methods:{
     selected(id){
       this.selectid=id;
+    },
+    finish(){
+      this.$router.push("/route")
     },
     getFirstSites:async function() {
       const {data: res2} = await this.$axios.get("/home/alltags");

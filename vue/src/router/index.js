@@ -11,6 +11,7 @@ import UserInfo from "../views/users/infos/UserInfo.vue";
 import UserRate from "../views/users/infos/Rating.vue";
 import Plan from "../views/Plan.vue";
  import Chat from "../views/ChatBase.vue";
+ import Route from "../views/Route.vue";
  import MsgBoard from "../views/MsgBoard.vue";
 import {InUseAttributeError} from "core-js/internals/dom-exception-constants";
 import msgBoard from "@/views/MsgBoard";
@@ -31,6 +32,7 @@ const routes=[
             {path:"plan",component: Plan,meta: {auth: false}},
              {path:"chat",component: Chat,meta: {auth: false}},
             {path:"msgBoard",component: msgBoard,meta: {auth: false}},
+            {path:"route",component: Route,meta: {auth: false}},
         ]
     },
     {
