@@ -22,6 +22,12 @@
     </el-row>
 
     <el-form-item  >
+      <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 请输入起点： </span></span>
+      <el-input placeholder="起点" v-model="input" style="width: 200px"></el-input>
+    </el-form-item>
+
+
+    <el-form-item  >
       <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 选择第一个景点： </span></span>
       <el-select v-model="a1" @change="changeSite1" placeholder="选择感兴趣的景点" value-key="id"  :disabled="dis1">
         <el-option v-for="item in array1" :label="item.sname" :value="item.sid" :key="item.sid" ></el-option>
@@ -81,6 +87,7 @@ export default {
       a1:"",
       a2:"",
       a3:"",
+      input:"",
       selectid:0,
       dis1:false,
       dis2:false,
@@ -143,6 +150,12 @@ export default {
       this.selectid=id;
     },
     finish(){
+      var temp=[];
+      temp.push(this.input)
+      temp.push(this.array1[0].sname)
+      temp.push(this.array2[0].sname)
+      temp.push(this.array3[0].sname)
+      localStorage.setItem('routes', JSON.stringify(temp))
       this.$router.push("/route")
     },
     getFirstSites:async function() {

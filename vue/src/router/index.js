@@ -20,12 +20,12 @@ Vue.use(VueAMap);
 Vue.use(VueRouter);
 
 VueAMap.initAMapApiLoader({
-    key: '73674da9f8fe033be85592e5c836dc4c',
+    key: 'a7f50827d4048c0a04ceb22a45142253',
     plugin: ['AMap.Weather','AMap.PlaceSearch','AMap.Driving'],
     v: '1.4.4'
 });
 window._AMapSecurityConfig = {
-    securityJsCode:'73674da9f8fe033be85592e5c836dc4c',
+    securityJsCode:'1dc99b3b717938eb7873a7fe779f38cc',
 }
 
 const routes=[
