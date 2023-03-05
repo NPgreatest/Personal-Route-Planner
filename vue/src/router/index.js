@@ -15,7 +15,17 @@ import Plan from "../views/Plan.vue";
  import MsgBoard from "../views/MsgBoard.vue";
 import {InUseAttributeError} from "core-js/internals/dom-exception-constants";
 import msgBoard from "@/views/MsgBoard";
+import VueAMap  from 'vue-amap';
+Vue.use(VueAMap);
 Vue.use(VueRouter);
+
+VueAMap.initAMapApiLoader({
+    // 申请的高德key
+    key: '73674da9f8fe033be85592e5c836dc4c',
+    // 插件集合，根据自己的需求选择插件（我是想用来定位获取cityCode，所以使用AMap.Geolocation插件）
+    plugin: ['AMap.Weather','AMap.PlaceSearch','AMap.Driving']
+});
+
 
 const routes=[
     {
