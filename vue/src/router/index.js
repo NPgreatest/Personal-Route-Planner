@@ -20,12 +20,13 @@ Vue.use(VueAMap);
 Vue.use(VueRouter);
 
 VueAMap.initAMapApiLoader({
-    // 申请的高德key
     key: '73674da9f8fe033be85592e5c836dc4c',
-    // 插件集合，根据自己的需求选择插件（我是想用来定位获取cityCode，所以使用AMap.Geolocation插件）
-    plugin: ['AMap.Weather','AMap.PlaceSearch','AMap.Driving']
+    plugin: ['AMap.Weather','AMap.PlaceSearch','AMap.Driving'],
+    v: '1.4.4'
 });
-
+window._AMapSecurityConfig = {
+    securityJsCode:'73674da9f8fe033be85592e5c836dc4c',
+}
 
 const routes=[
     {
