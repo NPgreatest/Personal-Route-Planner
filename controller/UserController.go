@@ -6,10 +6,12 @@ import (
 	"Personal-Route-Planner/model"
 	"Personal-Route-Planner/response"
 	"Personal-Route-Planner/utils"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/jung-kurt/gofpdf"
 	"net/http"
 	"os"
 	"strconv"
@@ -27,6 +29,29 @@ func NewUserRouter() *UserController {
 	return &UserController{userService: service.NewUserService(),
 		ratingService: service.NewRatingService(),
 		siteService:   service.NewSiteService()}
+}
+
+func (u *UserController) GetSummary(ctx *gin.Context) *response.Response {
+	con, err := strconv.Atoi(ctx.Query("tagid"))
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	raw, err := u.userService.GetSummary(con)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.AddPage()
+	pdf.AddUTF8Font("SimKai", "", "simkai.ttf")
+	pdf.SetFont("SimKai", "", 14)
+	pdf.MultiCell(0, 10, "团日活动总结", "", "C", false) // 添加标题
+	pdf.MultiCell(0, 10, raw, "", "L", false)
+	var buf bytes.Buffer
+	err = pdf.Output(&buf)
+	ctx.Writer.Header().Set("Content-Type", "application/pdf")
+	ctx.Writer.Header().Set("Content-Disposition", "attachment; filename=file.pdf")
+	ctx.Writer.Write(buf.Bytes())
+	return response.ResponseRegisterSuccess()
 }
 
 func (u *UserController) UserLogin(ctx *gin.Context) *response.Response {
