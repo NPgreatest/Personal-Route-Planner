@@ -148,6 +148,7 @@ export default {
   methods:{
     selected(id){
       this.selectid=id;
+      localStorage.setItem('tags',id);
     },
     finish(){
       var temp=[];

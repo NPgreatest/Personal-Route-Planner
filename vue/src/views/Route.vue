@@ -12,6 +12,7 @@
 <script>
 
 import { lazyAMapApiLoaderInstance } from "vue-amap";
+import axios from "axios";
 export default {
 
   // eslint-disable-next-line vue/multi-word-component-names
@@ -30,8 +31,25 @@ export default {
   },
   mounted() {
     this.initMap();
+    this.downloadpdf();
   },
   methods: {
+    downloadpdf(){
+      axios({
+        url: '/user/getsummary',
+      params:{tagid:localStorage.getItem('tags')},
+        method: 'GET',
+        responseType: 'blob' // important
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', '团日规划.pdf');
+        document.body.appendChild(link);
+        link.click();
+      });
+
+    },
     initMap() {
 
       lazyAMapApiLoaderInstance.load().then(() => {
