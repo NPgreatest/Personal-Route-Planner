@@ -20,15 +20,18 @@ import (
 )
 
 type UserController struct {
-	userService   *service.UserService
-	ratingService *service.RatingService
-	siteService   *service.SiteService
+	userService     *service.UserService
+	ratingService   *service.RatingService
+	siteService     *service.SiteService
+	activityService *service.ActivityService
 }
 
 func NewUserRouter() *UserController {
 	return &UserController{userService: service.NewUserService(),
-		ratingService: service.NewRatingService(),
-		siteService:   service.NewSiteService()}
+		ratingService:   service.NewRatingService(),
+		siteService:     service.NewSiteService(),
+		activityService: service.NewActivityService(),
+	}
 }
 
 func (u *UserController) GetSummary(ctx *gin.Context) *response.Response {
@@ -192,6 +195,20 @@ func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 		return response.ResponseQueryFailed()
 	}
 	res := ChatGPT.Callgpt("请介绍旅游景点" + sname + "\n" + str)
+	return response.ResponseQuerySuccess(res)
+}
+
+func (u *UserController) GetActivity(ctx *gin.Context) *response.Response {
+	sid, err := strconv.Atoi(ctx.Query("sid"))
+	if err != nil {
+		fmt.Println("siteid wrong")
+		return response.ResponseQueryFailed()
+	}
+	res, err := u.activityService.GetActivity(sid)
+	if err != nil {
+		fmt.Println("siteid wrong")
+		return response.ResponseQueryFailed()
+	}
 	return response.ResponseQuerySuccess(res)
 }
 
