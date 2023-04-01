@@ -22,3 +22,7 @@ func (t *TagService) FindAllTags() (tags []model.TagList, err error) {
 func (t *TagService) FindSitesByTags(tagid int) (sites []model.Sites, err error) {
 	return t.tagDao.FindSitesByTags(tagid)
 }
+
+func (t *TagService) FindTagName(tagid int) (res string, err error) {
+	return t.tagDao.FindTagName(tagid)
+}

@@ -24,6 +24,7 @@ type UserController struct {
 	ratingService   *service.RatingService
 	siteService     *service.SiteService
 	activityService *service.ActivityService
+	tagService      *service.TagService
 }
 
 func NewUserRouter() *UserController {
@@ -31,24 +32,53 @@ func NewUserRouter() *UserController {
 		ratingService:   service.NewRatingService(),
 		siteService:     service.NewSiteService(),
 		activityService: service.NewActivityService(),
+		tagService:      service.NewTagService(),
 	}
 }
 
 func (u *UserController) GetSummary(ctx *gin.Context) *response.Response {
 	con, err := strconv.Atoi(ctx.Query("tagid"))
-	if err != nil {
-		return response.ResponseQueryFailed()
-	}
+	t1 := ctx.Query("sites")
+	t2 := ctx.Query("activities")
+	tag, err := u.tagService.FindTagName(con)
 	raw, err := u.userService.GetSummary(con)
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
+	var sites []string
+	for _, s := range strings.Split(t1[1:len(t1)-1], ",") {
+		if s != "\"\"" {
+			sites = append(sites, s)
+		}
+	}
+	activity := make([]string, 0)
+	for _, s := range strings.Split(t2[1:len(t2)-1], ",") {
+		if s != "\"\"" {
+			activity = append(activity, s)
+		}
+	}
+	q := "请进行活动主题为" + tag + "活动总结：我们从" + sites[0] + "出发，分别在"
+	for index, value := range sites {
+		if index == 0 {
+			continue
+		}
+		q += fmt.Sprintf(value + "进行了活动" + activity[index-1] + "，")
+	}
+	fmt.Println(q)
+	if err != nil {
+		return response.ResponseQueryFailed()
+	}
+
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 	pdf.AddUTF8Font("SimKai", "", "simkai.ttf")
 	pdf.SetFont("SimKai", "", 14)
 	pdf.MultiCell(0, 10, "团日活动总结", "", "C", false) // 添加标题
+	pdf.Ln(10)
 	pdf.MultiCell(0, 10, raw, "", "L", false)
+	pdf.Ln(10)
+	res := ChatGPT.Callgpt(q)
+	pdf.MultiCell(0, 10, res, "", "L", false)
 	var buf bytes.Buffer
 	err = pdf.Output(&buf)
 	ctx.Writer.Header().Set("Content-Type", "application/pdf")
@@ -208,6 +238,13 @@ func (u *UserController) GetActivity(ctx *gin.Context) *response.Response {
 	if err != nil {
 		fmt.Println("siteid wrong")
 		return response.ResponseQueryFailed()
+	}
+	type t struct {
+		name string `json:"name"`
+	}
+	var temp []t
+	for _, v := range res {
+		temp = append(temp, t{name: v})
 	}
 	return response.ResponseQuerySuccess(res)
 }

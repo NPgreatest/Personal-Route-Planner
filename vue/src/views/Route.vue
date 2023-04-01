@@ -37,7 +37,7 @@ export default {
     downloadpdf(){
       axios({
         url: '/user/getsummary',
-      params:{tagid:localStorage.getItem('tags')},
+      params:{tagid:localStorage.getItem('tags'),sites:localStorage.getItem("routes"),activities:localStorage.getItem("activites")},
         method: 'GET',
         responseType: 'blob' // important
       }).then(response => {
@@ -68,12 +68,13 @@ export default {
         });
         const routes =JSON.parse(localStorage.getItem('routes'))
         // 根据起终点名称规划驾车导航路线
-        driving.search([
-          {keyword: routes[0].toString() ,city:'上海'},
-          {keyword: routes[1].toString() ,city:'上海'},
-          {keyword: routes[2].toString() ,city:'上海'},
-          {keyword: routes[3].toString() ,city:'上海'}
-        ], function(status, result) {
+        var searchParams = [];
+        for (var i = 0; i < routes.length; i++) {
+          searchParams.push({ keyword: routes[i].toString(), city: '上海' });
+        }
+        driving.search(
+          searchParams
+        , function(status, result) {
           console.log(status,result)
           if (status === 'complete') {
             self.path = result.routes[0].path;

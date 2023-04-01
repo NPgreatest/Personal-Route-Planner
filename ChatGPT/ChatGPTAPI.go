@@ -1,64 +1,70 @@
 package ChatGPT
 
 import (
-	gpt3 "github.com/PullRequestInc/go-gpt3"
-	"golang.org/x/net/context"
-	"log"
-	"strings"
+	"bytes"
+	"encoding/json"
+	"io"
+	"io/ioutil"
+	"net/http"
 )
 
-func GetResponse(client gpt3.Client, ctx context.Context, quesiton string) string {
-	var res strings.Builder
-	err := client.CompletionStreamWithEngine(ctx, gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
-		Prompt: []string{
-			quesiton,
-		},
-		MaxTokens:   gpt3.IntPtr(4000),
-		Temperature: gpt3.Float32Ptr(0),
-	}, func(resp *gpt3.CompletionResponse) {
-		res.WriteString(resp.Choices[0].Text)
-		//fmt.Print(resp.Choices[0].Text)
-	})
-	if err != nil {
-		res.WriteString(err.Error())
-		//fmt.Println(err)
+const openaiURL = "https://api.openai.com/v1/completions"
+
+var messages []Message
+
+const apiKey = ""
+
+func getOpenAIResponse() OpenaiResponse {
+	requestBody := OpenaiRequest{
+		//Model: "text-davinci-002",
+		Model:    "gpt-3.5-turbo",
+		Messages: messages,
 	}
-	//fmt.Printf("\n")
-	//fmt.Println(res.String())
-	return res.String()
+	requestJSON, _ := json.Marshal(requestBody)
+
+	req, err := http.NewRequest("POST", openaiURL, bytes.NewBuffer(requestJSON))
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(resp.Body)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	var response OpenaiResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		println("Error: ", err.Error())
+		return OpenaiResponse{}
+	}
+
+	messages = append(messages, Message{
+		Role:    "assistant",
+		Content: response.Choices[0].Messages.Content,
+	})
+
+	return response
 }
-
-type NullWriter int
-
-func (NullWriter) Write([]byte) (int, error) { return 0, nil }
 
 func Callgpt(q string) string {
-	log.SetOutput(new(NullWriter))
-	apiKey := ""
-	if apiKey == "" {
-		panic("Missing API KEY")
-	}
-	ctx := context.Background()
-	client := gpt3.NewClient(apiKey)
-	//rootCmd := &cobra.Command{
-	//	Use:   "chatgpt",
-	//	Short: "Chat with ChatGPT in console.",
-	//	Run: func(cmd *cobra.Command, args []string) {
-	//		GetResponse(client, ctx, q)
-	//	},
-	//}
-	//rootCmd.SetOut(os.Stdout)
-	//log.Fatal(rootCmd.Execute())
-	return GetResponse(client, ctx, q)
-}
-
-func validateQuestion(question string) string {
-	quest := strings.Trim(question, " ")
-	keywords := []string{"", "loop", "break", "continue", "cls", "exit", "block"}
-	for _, x := range keywords {
-		if quest == x {
-			return ""
-		}
-	}
-	return quest
+	messages = append(messages, Message{
+		Role:    "user",
+		Content: q,
+	})
+	return getOpenAIResponse().Choices[0].Messages.Content
 }

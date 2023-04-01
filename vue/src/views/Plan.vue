@@ -19,7 +19,7 @@
       <el-input placeholder="起点" v-model="input" style="width: 200px"></el-input>
     </el-form-item>
 
-    <div v-for="(item, index) in selectedSites" :key="index">
+    <div v-for="(item, index) in selectedSites" :key="index" >
       <el-form-item>
         <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 选择第{{ index + 1 }}个景点： </span></span>
         <el-select v-model="item.id" @change="changeSite(index,item.id)" placeholder="选择感兴趣的景点" value-key="id">
@@ -28,7 +28,22 @@
         <el-button v-if="index < 4" @click="addSite(index)">添加景点</el-button>
         <el-button v-if="index > 0" @click="removeSite(index)">删除景点</el-button>
       </el-form-item>
+
+      <el-form-item style="display: inline-block; margin-right: 10px;">
+        <span slot="label" style="color: #00B5AD;font-size: 24px;"> 选择该景点活动： </span>
+        <el-select v-model="item.aid" @change="changeActivity(index,item.id)" placeholder="选择感兴趣的景点" value-key="name" >
+          <el-option v-for="site in activities[index]" :label="site" :value="site" :key="site"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item style="display: inline-block;width:1000px; margin-left: -200px; ">
+        <div class="container">
+          <div ref="textContent" class="textarea-content"></div>
+          <textarea ref="textarea" v-model="activityDescription[index]" placeholder="活动介绍" :disabled="true" @input="resizeTextarea"></textarea>
+        </div>
+      </el-form-item>
     </div>
+
+
     <b-avatar  v-for="item in select"   class="comment-avatar" :src="item.pic" size="15rem" ></b-avatar>
     <el-form-item>
       <el-button type="primary" @click="repick">重置</el-button>
@@ -49,6 +64,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Plan",
@@ -66,7 +83,11 @@ export default {
           [],
           []
       ],
-      selectedSites: [{ id: null }],
+      activityDescription: [],
+      activities:[
+          [''],[''],[''],[''],['']
+      ],
+      selectedSites: [{ id: null, aid:null }],
       maxSiteCount: 5,
       input:"",
       selectid:0,
@@ -119,43 +140,84 @@ export default {
           pic:"http://localhost:8080/images/1.jpg"
         }
       ],
+      activity:['','','','',''],
       array2:[],
       array3:[],
+      key:'',
     }
   },
   created() {
     this.getFirstSites()
   },
   methods:{
+    resizeTextarea() {
+      const container = this.$refs.textarea.parentNode;
+      const textarea = this.$refs.textarea;
+
+      const computedStyle = window.getComputedStyle(textarea);
+      const borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+      const borderBottomWidth = parseFloat(computedStyle.getPropertyValue('border-bottom-width'));
+      const paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+      const paddingBottom = parseFloat(computedStyle.getPropertyValue('padding-bottom'));
+
+      const lineHeight = parseFloat(computedStyle.getPropertyValue('line-height'));
+
+      const contentHeight = this.$refs.textContent.offsetHeight;
+      const rows = Math.ceil(contentHeight / lineHeight);
+
+      const height = rows * lineHeight + borderTopWidth + borderBottomWidth + paddingTop + paddingBottom;
+      container.style.height = `${height}px`;
+      container.style.minHeight = `${height}px`;
+    },
     addSite(index) {
       this.selectedSites.splice(index + 1, 0, { id: null });
     },
     removeSite(index) {
       this.selectedSites.splice(index, 1);
     },
-    changeSite1:async function(value){
-      this.select=[]
-      this.select.push({sid:value,pic: this.sites[value-1].pic})
-      this.dis1=true
-      const {data: res} = await this.$axios.get("/user/getrecommand",{params: {sid: this.select[0].sid}});
-      if (res.status === 1) {
-        this.array2 = res.data.length > 0 ? res.data[0] : this.array2;
-        this.array2 =this.array2.filter(item =>item.sid!=this.select[0].sid)
-      }else{
-        this.$message.error("获取推荐失败，请登录")
-        return
-      }
+    changeActivity:async function(index,id){
+      const item = this.selectedSites[index];
+      this.activity[index]=item.aid
+      console.log(this.select[index].sname,item.aid);
+      axios.post('https://api.openai.com/v1/completions',
+          {
+            prompt: `请介绍在景点${this.select[index].sname}举办的${item.aid}活动。`,
+            max_tokens: 2048,
+            model: "text-davinci-003",},{
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': 'Bearer '+this.key
+            },
+          })
+          .then(response => {
+            const activityDescription = response.data.choices[0].text.trim()
+            this.$set(this.activityDescription, index, activityDescription)
+          })
+          .catch(error => {
+            console.log(error)
+          })
     },
     changeSite:async function(index,value) {
       this.select.push()
-      this.select[index]=({sid:value,pic: this.sites[value-1].pic})
-      console.log(index,value)
+      this.select[index]=({sid:value,pic: this.sites[value-1].pic, sname:this.sites[value-1].sname})
+      // console.log(index,value)
       const {data: res} = await this.$axios.get("/user/getrecommand",{params: {sid: value}});
+      const {data: res2} = await this.$axios.get("/user/getactivity",{params: {sid: value}});
       if (res.status === 1) {
         this.availableSites[index+1] = res.data.length > 0 ? res.data[0] : this.availableSites[index+1];
         //this.availableSites[index+1] =this.availableSites[index].filter(item =>item.sid!=this.select[index].sid)
       }else{
         this.$message.error("获取推荐失败，请登录")
+        return
+      }
+      if (res2.status === 1) {
+        //this.activities[index] = res2.data.length > 0 ? res2.data[0] : this.activities[index];
+        this.$set(this.activities,index,res2.data[0])
+        // console.log(this.activities)
+        // console.log(this.availableSites)
+
+      }else{
+        this.$message.error("获取活动失败")
         return
       }
       // const selectedSiteIds = this.selectedSites.map(item => item.id);
@@ -177,10 +239,11 @@ export default {
     finish(){
       var temp=[];
       temp.push(this.input)
-      temp.push(this.array1[0].sname)
-      temp.push(this.array2[0].sname)
-      temp.push(this.array3[0].sname)
+      for(var i=0;i<this.select.length;i++){
+        temp.push(this.select[i].sname)
+      }
       localStorage.setItem('routes', JSON.stringify(temp))
+      localStorage.setItem('activites',JSON.stringify(this.activity))
       this.$router.push("/route")
     },
     getFirstSites:async function() {
@@ -200,22 +263,6 @@ export default {
       this.$message.error("获取景点库失败")
       return
       }
-    },
-
-    changeSite2:async function(value){
-      this.dis2=true
-      this.select.push({sid:value,pic: this.sites[value-1].pic})
-      const {data: res} = await this.$axios.get("/user/getrecommand",{params: {sid: this.select[1].sid}});
-      if (res.status === 1) {
-        this.array3 = res.data.length > 0 ? res.data[0] : this.array3;
-      }else{
-        this.$message.error("获取推荐失败，请登录")
-        return
-      }
-    },
-    changeSite3:async function(value){
-      this.dis3=true
-      this.select.push({sid:value,pic: this.sites[value-1].pic})
     },
     repick(){
       this.dis1=false
@@ -262,7 +309,7 @@ export default {
 }
 .elForm{
   top: 10%;
-  left: 30%;
+  left: 25%;
   margin: auto;
   display: flex;
   justify-content: center;
@@ -282,5 +329,33 @@ export default {
 .buttons:hover {
   transform:  scale(1.22);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.container {
+  width: 100%;
+  height: auto;
+  min-height: 120px;
+  padding: 3px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  line-height: 1; /* 将行高设置为字体大小的倍数，例如 1 或 1.2 */
+}
+
+.textarea-content {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+textarea {
+  width: 100%;
+  height: auto;
+  min-height: 120px;
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: inherit;
 }
 </style>
