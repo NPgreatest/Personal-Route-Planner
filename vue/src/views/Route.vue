@@ -31,24 +31,22 @@ export default {
   },
   mounted() {
     this.initMap();
-    this.downloadpdf();
+    this.makesummary();
   },
   methods: {
-    downloadpdf(){
-      axios({
-        url: '/user/getsummary',
-      params:{tagid:localStorage.getItem('tags'),sites:localStorage.getItem("routes"),activities:localStorage.getItem("activites")},
-        method: 'GET',
-        responseType: 'blob' // important
-      }).then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', '团日规划.pdf');
-        document.body.appendChild(link);
-        link.click();
+    makesummary:async function(){
+      const { data: res } = await this.$axios.get("/user/getsummary", {
+        params: {
+          tagid: localStorage.getItem("tags"),
+          sites: localStorage.getItem("routes"),
+          activities: localStorage.getItem("activites")
+        }
       });
-
+      //console.log(res.data[0])
+      localStorage.setItem("summay", encodeURIComponent(res.data[0]));
+      const newRoute = { path: '/summary' };
+      const newRouteUrl = this.$router.resolve(newRoute).href;
+      window.open(newRouteUrl, '_blank');
     },
     initMap() {
 

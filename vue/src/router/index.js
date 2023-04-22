@@ -15,6 +15,7 @@ import Plan from "../views/Plan.vue";
  import MsgBoard from "../views/MsgBoard.vue";
 import {InUseAttributeError} from "core-js/internals/dom-exception-constants";
 import msgBoard from "@/views/MsgBoard";
+import Summary from "../views/Summary.vue";
 import VueAMap  from 'vue-amap';
 Vue.use(VueAMap);
 Vue.use(VueRouter);
@@ -44,6 +45,7 @@ const routes=[
              {path:"chat",component: Chat,meta: {auth: false}},
             {path:"msgBoard",component: msgBoard,meta: {auth: false}},
             {path:"route",component: Route,meta: {auth: false}},
+
         ]
     },
     {
@@ -66,6 +68,11 @@ const routes=[
             {path: "/userrate",component: UserRate,meta: {auth: true}}
         ]
     },
+    {
+        path:"/summary",
+        name:"Summary",
+        component: Summary,
+    }
 ];
 
 const router=new VueRouter({

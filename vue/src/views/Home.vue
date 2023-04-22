@@ -6,15 +6,29 @@
       <img :src="imgSrc2" width="100%" height="100%" alt="" />
       <bubbles-effect :options="options" class="bubble"></bubbles-effect>
       <div id="title">
-        <transition-group appear
-                          name="animate__animated animate__bounce animate__slow"
-                          enter-active-class="animate__bounceIn"
-                          leave-active-class="animate__bounceOut"
-        >
-          <h1 key="1">{{'智能路线规划及其可视化'}}</h1>
-          <p key="2">{{'Intelligent-route-planning-and-visualization'}}</p>
 
-        </transition-group>
+        <div>
+          <transition-group appear name="animate__animated animate__bounce animate__slow"
+                            enter-active-class="animate__bounceIn"
+                            leave-active-class="animate__bounceOut">
+            <div v-for="(image, index) in images" :key="index">
+              <img :src="image.src" :alt="image.alt" width="150%" height="150%">
+            </div>
+          </transition-group>
+        </div>
+<!--        <transition-group appear-->
+<!--                          name="animate__animated animate__bounce animate__slow"-->
+<!--                          enter-active-class="animate__bounceIn"-->
+<!--                          leave-active-class="animate__bounceOut"-->
+<!--        >-->
+<!--          <div>-->
+<!--            <h1>My Image</h1>-->
+<!--            <img src="../static/final-logo.png" alt="My Image">-->
+<!--          </div>-->
+<!--&lt;!&ndash;          <h1 key="1">{{'智能路线规划及其可视化'}}</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;          <p key="2">{{'Intelligent-route-planning-and-visualization'}}</p>&ndash;&gt;-->
+
+<!--        </transition-group>-->
       </div>
     </div>
 
@@ -38,15 +52,20 @@ export default {
   data(){
     return{
       imgSrc2:require('../static/background.jpg'),
+      imageUrl: '../static/final-logo.png',
       options: {
-        color: 'random', //Bubble color
-        radius: 20, //Bubble radius
+        color: 'random', //Bubble co
+        radius: 20, //Bubble radius1231
         densety: 0.4, // The larger the bubble density, the greater the density (suggest no more than 1).
         clearOffset: 0.4 // The larger the bubble disappears [0-1], the longer it disappears.
       },
+      images: [
+        { src: require('../assets/final-logo.png'), alt: 'Image 1' },
+      ]
 
     }
-  }
+  },
+
 
 }
 </script>
@@ -81,8 +100,8 @@ export default {
   line-height: 1.25;
   color: white;
   text-align: center;
-  top: 42%;
-  left: 30%;
+  top: 30%;
+  left: 33%;
   h1 {
     padding-bottom: 20px;
   }

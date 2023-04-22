@@ -7,7 +7,7 @@ ENV CGO_ENABLED=0 \
     GO111MODULE=on
 
 WORKDIR /build
-COPY ["main.go","go.mod","go.sum","simkai.ttf","./"]
+COPY ["main.go","go.mod","go.sum","./"]
 COPY ["/conf","./"]
 COPY . .
 

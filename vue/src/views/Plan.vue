@@ -38,7 +38,7 @@
       <el-form-item style="display: inline-block;width:1000px; margin-left: -200px; ">
         <div class="container">
           <div ref="textContent" class="textarea-content"></div>
-          <textarea ref="textarea" v-model="activityDescription[index]" placeholder="活动介绍" :disabled="true" @input="resizeTextarea"></textarea>
+          <textarea ref="textarea" v-model="activityDescription[index]" style="color: #1B1C1D;"   placeholder="活动介绍" :disabled="true"  @input="resizeTextarea"></textarea>
         </div>
       </el-form-item>
     </div>
@@ -65,7 +65,7 @@
 
 <script>
 import axios from "axios";
-
+ //
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Plan",
@@ -80,7 +80,7 @@ export default {
         [],
           [],
           [],
-          [],
+          [],//
           []
       ],
       activityDescription: [],
@@ -143,7 +143,7 @@ export default {
       activity:['','','','',''],
       array2:[],
       array3:[],
-      key:'',
+      key:'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',
     }
   },
   created() {
@@ -178,14 +178,14 @@ export default {
     changeActivity:async function(index,id){
       const item = this.selectedSites[index];
       this.activity[index]=item.aid
-      console.log(this.select[index].sname,item.aid);
+      //console.log(this.select[index].sname,item.aid);
       axios.post('https://api.openai.com/v1/completions',
           {
             prompt: `请介绍在景点${this.select[index].sname}举办的${item.aid}活动。`,
-            max_tokens: 2048,
+            max_tokens: 1024,
             model: "text-davinci-003",},{
             headers: {
-              'content-type': 'application/json',
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer '+this.key
             },
           })
@@ -244,7 +244,7 @@ export default {
       }
       localStorage.setItem('routes', JSON.stringify(temp))
       localStorage.setItem('activites',JSON.stringify(this.activity))
-      this.$router.push("/route")
+        this.$router.push("/route")
     },
     getFirstSites:async function() {
       const {data: res2} = await this.$axios.get("/home/alltags");
@@ -299,12 +299,13 @@ export default {
 </script>
 
 <style scoped>
-.background{
-
-  width:100%;
-  height:100%;
-  z-index:-1;
-  position: absolute;
+.background {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
   background-size: 100% 100%;
 }
 .elForm{
@@ -357,5 +358,11 @@ textarea {
   resize: none;
   outline: none;
   font-size: inherit;
+  color: #1B1C1D;
+  font-weight: bold;
+}
+textarea::placeholder {
+  color: #1B1C1D;
+  font-weight: bold;
 }
 </style>
