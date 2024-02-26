@@ -143,7 +143,7 @@ export default {
       activity:['','','','',''],
       array2:[],
       array3:[],
-      key:'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',
+      key:'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',
     }
   },
   created() {

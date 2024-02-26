@@ -1,70 +1,30 @@
 package ChatGPT
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
-	"io/ioutil"
-	"net/http"
+	"context"
+	"fmt"
+	openai "github.com/sashabaranov/go-openai"
 )
 
-const openaiURL = "https://api.openai.com/v1/completions"
-
-var messages []Message
-
-const apiKey = ""
-
-func getOpenAIResponse() OpenaiResponse {
-	requestBody := OpenaiRequest{
-		//Model: "text-davinci-002",
-		Model:    "gpt-3.5-turbo",
-		Messages: messages,
-	}
-	requestJSON, _ := json.Marshal(requestBody)
-
-	req, err := http.NewRequest("POST", openaiURL, bytes.NewBuffer(requestJSON))
-	if err != nil {
-		panic(err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(resp.Body)
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-
-	var response OpenaiResponse
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		println("Error: ", err.Error())
-		return OpenaiResponse{}
-	}
-
-	messages = append(messages, Message{
-		Role:    "assistant",
-		Content: response.Choices[0].Messages.Content,
-	})
-
-	return response
-}
+const apiKey = "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"
 
 func Callgpt(q string) string {
-	messages = append(messages, Message{
-		Role:    "user",
-		Content: q,
-	})
-	return getOpenAIResponse().Choices[0].Messages.Content
+	client := openai.NewClient(apiKey)
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: q,
+				},
+			},
+		},
+	)
+	if err != nil {
+		fmt.Printf("ChatCompletion error: %v\n", err)
+		return "接口调用失败"
+	}
+	return resp.Choices[0].Message.Content
 }

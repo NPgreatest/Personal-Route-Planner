@@ -145,8 +145,6 @@ func sum(x []float64) float64 {
 	return sum
 }
 
-// GetBinaryRecommendations Gets Recommendations for a user (row index) based on the prefs matrix.
-// Uses cosine similarity for rating scale, and jaccard similarity if binary
 func GetBinaryRecommendations(prefs *DenseMatrix, user int, products []string) ([]string, []float64, error) {
 	// make sure user is in the preference matrix
 	if user >= prefs.Rows() {
