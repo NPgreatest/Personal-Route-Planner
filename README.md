@@ -1,45 +1,28 @@
-# Personal-Route-Planner
-A route planner system supported site review, comment sites and personal route planning 
-developed by Golang and Vue
-# 1. The composition of this program
-* back-end: Golang
-* front-end:Vue.js
-* deploy:Docker-compose
+# 智能路线规划系统(RAG+协同过滤)
 
-### The framework of back-end:
-> sqlx, gin, json-web-token, viper, snowflake, base64-encoding-decoding
+## 项目简介
 
-* The database of back-end:Mysql
-* All pictures are stored in /images in the static way, and access in website 
-in https://127.0.0.1/images/example.jpg
+本项目通过结合`langchain js`与`Node.js`服务，成功开发了一个创新的通用RAG（推荐算法生成器）应用。该系统的核心功能是为用户提供个性化的景点推荐，旨在通过高效的路线规划，为用户的旅行体验增添价值。利用先进的协同过滤技术，本系统从`去哪儿网`的景点数据集及加州大学尔湾分校`UCI`提供的`Google Sites Review`数据集中挖掘和分析用户偏好，实现了对景点的智能推荐。
 
+## 技术架构
 
-### The framework of front-end:
-> element-ui, e-chats, animation
+本项目采用了多样化的技术栈，以满足不同功能模块的需求，具体包括：
 
+- **后端技术**：采用`Golang`与`Node.js`进行后端开发，其中Golang后端负责处理展示给用户的网页内容，Node.js后端则支持管理员构建和管理景点知识库的系统后台。
+- **数据库技术**：结合`MySQL`和`MongoDB`数据库技术，以高效管理数据存储，确保系统的数据处理性能和稳定性。
+- **前端技术**：项目包含两个基于`Vue`的前端应用，第一个Vue前端应用为用户提供友好的界面访问和交互体验，第二个Vue前端应用则为管理员提供强大的景点知识库构建和管理工具。
 
-# 2.Get started
-Before starting, you should already install golang, docker and nodejs in your develop env.
+## 功能特色
 
-you can run 
-```docker-compose up``` . or run back-end and front-end separately.
+- **个性化推荐**：通过协同过滤算法，根据用户历史数据和偏好，智能推荐景点，提供个性化的旅游规划方案。
+- **景点知识库管理**：为管理员提供了一个强大的后台系统，支持景点知识库的构建、编辑和管理，确保推荐系统的数据准确性和丰富性。
+- **友好的用户界面**：基于Vue技术构建的前端应用，为用户和管理员提供了清晰、直观和响应式的操作界面，极大地提升了用户体验。
 
-Run back-end separately in GoLand
+E-R图：
 
-Run front-end separately by
-```
-cd vue
-npm i
-npm run serve
-```
-Then you can access website in http://localhost:8080/
+![E-R](D:\Golang-Project\Personal-Route-Planner\display\E-R.svg)
 
-# 3. TO-DO LIST
-- [x] recommend algorithm
-- [x] connect with 高德API
-- [x] connect with chatgpt-ai
-- [ ] redis server
-- [ ] change to GORM framework
+RAG模块展示图：
 
-
+<img src="D:\Golang-Project\Personal-Route-Planner\display\7f4049af55f8d3213c0c734092bcd2b.png" alt="7f4049af55f8d3213c0c734092bcd2b" style="zoom:50%;" />
 
