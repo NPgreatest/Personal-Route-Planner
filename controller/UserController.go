@@ -205,11 +205,14 @@ func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 		fmt.Println("siteid wrong")
 		return response.ResponseQueryFailed()
 	}
-	sname, err := u.siteService.SiteGPT(sid)
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
-	res := ChatGPT.Callgpt("请介绍旅游景点" + sname + "\n" + str)
+	res, err := ChatGPT.QueryNodeQuery(str, sid)
+	if err != nil {
+		fmt.Println(err)
+		return response.ResponseQueryFailed()
+	}
 	return response.ResponseQuerySuccess(res)
 }
 

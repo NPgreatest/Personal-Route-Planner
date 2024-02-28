@@ -1,0 +1,25 @@
+# Build and Release Folders
+bin-debug/
+bin-release/
+upload/
+[Oo]bj/
+[Bb]in/
+
+# Other files and folders
+.settings/
+
+# Executables
+*.swf
+*.air
+*.ipa
+*.apk
+
+# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
+# should NOT be excluded as they contain compiler settings and other important
+# information for Eclipse / Flash Builder.
+
+aimc-model/chatglm2-6b/*.bin
+aimc-model/ptuning/AdvertiseGen
+/node_modules
+
+
