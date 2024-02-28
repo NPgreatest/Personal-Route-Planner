@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"Personal-Route-Planner/ChatGPT"
+	"Personal-Route-Planner/Node"
 	"Personal-Route-Planner/db/service"
 	"Personal-Route-Planner/model"
 	"Personal-Route-Planner/response"
@@ -62,13 +62,12 @@ func (u *UserController) GetSummary(ctx *gin.Context) *response.Response {
 		}
 		q += fmt.Sprintf(value + "进行了活动" + activity[index-1] + "，")
 	}
-	//fmt.Println(q)
+
+	res, err := Node.QueryNodeChatGPT(q)
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
-	res := ChatGPT.Callgpt(q)
 
-	fmt.Println(raw + res)
 	return response.ResponseQuerySuccess(raw + res)
 }
 
@@ -208,7 +207,7 @@ func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
-	res, err := ChatGPT.QueryNodeQuery(str, sid)
+	res, err := Node.QueryNodeQuery(str, sid)
 	if err != nil {
 		fmt.Println(err)
 		return response.ResponseQueryFailed()

@@ -124,7 +124,6 @@ func calculateWeightedMean(ratings, sims map[int]float64, products []string) (re
 	return
 }
 
-// Sorts a map of floats -> strings to get the best recommendations. Probably a better way to do this.
 func sortMap(recs map[float64]string) ([]string, []float64) {
 	vals := make([]float64, 0)
 	for k, _ := range recs {
@@ -143,45 +142,6 @@ func sum(x []float64) float64 {
 		sum += x[i]
 	}
 	return sum
-}
-
-func GetBinaryRecommendations(prefs *DenseMatrix, user int, products []string) ([]string, []float64, error) {
-	// make sure user is in the preference matrix
-	if user >= prefs.Rows() {
-		return nil, nil, errors.New("user index out of range")
-	}
-	prefs = replaceNA(prefs)
-	// item ratings
-	ratings := make(map[float64]string)
-	// Get user row from prefs matrix
-	user_ratings := prefs.GetRowVector(user).Array()
-
-	for ii := 0; ii < prefs.Cols(); ii++ {
-		if user_ratings[ii] == float64(0) {
-			num_liked := sum(prefs.GetColVector(ii).Array())
-			num_disliked := float64(prefs.Rows()) - num_liked
-			jaccard_liked := make([]float64, 0)
-			jaccard_disliked := make([]float64, 0)
-			for i := 0; i < prefs.Rows(); i++ {
-				if i != user {
-					other := prefs.GetRowVector(i).Array()
-					if other[ii] == float64(0) {
-						jaccard_disliked = append(jaccard_disliked, Jaccard(user_ratings, other))
-					} else {
-						jaccard_liked = append(jaccard_liked, Jaccard(user_ratings, other))
-					}
-				}
-			}
-			rating := (sum(jaccard_liked) - sum(jaccard_disliked)) / (num_disliked + num_liked)
-			if products != nil {
-				ratings[rating] = products[ii]
-			} else {
-				ratings[rating] = strconv.Itoa(ii)
-			}
-		}
-	}
-	prods, scores := sortMap(ratings)
-	return prods, scores, nil
 }
 
 func MakeRatingMatrix(ratings []float64, rows, cols int) *DenseMatrix {

@@ -27,10 +27,12 @@ func NewRatingDao() *RatingDao {
 		},
 	}
 }
+
 func (r *RatingDao) GetSitesNumber() (res int, err error) {
 	err = sqldb.Get(&res, r.sql[4])
 	return
 }
+
 func (r *RatingDao) MakeRecommandMatrix() (matrix *matrix.DenseMatrix, err error) {
 	js := make([]string, 0)            //查询结果存到string数组
 	Rates := make([]model.Rating, 0)   //结构体数组
@@ -130,10 +132,7 @@ func (r *RatingDao) GetRecommand(name string, sid int) (sites []model.Sites, err
 		sqldb.Get(&sit, r.sql[5], sits[i])
 		sites = append(sites, sit)
 	}
-	//fmt.Println(res)
-	//for _, v := range sites {
-	//	fmt.Println(v.Sid)
-	//}
+
 	return
 }
 
