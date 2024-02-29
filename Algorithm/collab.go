@@ -2,19 +2,11 @@ package Algorithm
 
 import (
 	"errors"
-	"fmt"
-	. "github.com/skelterjohn/go.matrix"
 	"math"
 	"sort"
-	"strconv"
 )
 
-func TimesMatrix(a float64, b []float64) []float64 {
-	for i := 0; i < len(b); i++ {
-		b[i] += a * b[i]
-	}
-	return b
-}
+var GlobalVec [][]float64
 
 // 向量电积
 func DotProduct(a, b []float64) (float64, error) {
@@ -48,102 +40,29 @@ func CosineSim(a, b []float64) float64 {
 	return dp / (a_squared * b_sqaured)
 }
 
-// A并B/A交B
-func Jaccard(a, b []float64) float64 {
-	intersection := float64(0)
-	for i := 0; i < len(a); i++ {
-		if a[i] == b[i] {
-			intersection += 1
-		}
-	}
-	union := float64(0)
-	for i := 0; i < len(a); i++ {
-		if a[i] > 0 || b[i] > 0 {
-			union += 1
-		}
-	}
-	return intersection / union
+// 定义一个结构体来存储索引和距离
+type idxDist struct {
+	idx      int
+	distance float64
 }
 
-// 更换NA
-func replaceNA(prefs *DenseMatrix) *DenseMatrix {
-	arr := prefs.Array()
-	for i := 0; i < len(arr); i++ {
-		if math.IsNaN(arr[i]) {
-			arr[i] = float64(0)
-		}
+// 实现向量搜索函数
+func FindNearestVectors(vectors [][]float64, targetIdx, n int) []int {
+	distances := make([]idxDist, len(vectors))
+	for i, vec := range vectors {
+		distances[i] = idxDist{i, CosineSim(vectors[targetIdx], vec)}
 	}
-	return MakeDenseMatrix(arr, prefs.Rows(), prefs.Cols())
-}
 
-// GetRecommendations Gets Recommendations for a user (row index) based on the prefs matrix.
-// Uses cosine similarity for rating scale, and jaccard similarity if binary
-func GetRecommendations(preference *DenseMatrix, user int, products []string) ([]string, []float64, error) {
-	// make sure user is in the preference matrix
-	if user >= preference.Rows() {
-		return nil, nil, errors.New("user index out of range")
-	}
-	preference = replaceNA(preference)
-	// item ratings
-	ratings := make(map[int]float64, 0)
-	sims := make(map[int]float64, 0)
-	// Get user row from preference matrix
-	userRatings := preference.GetRowVector(user).Array()
-	for i := 0; i < preference.Rows(); i++ {
-		// don't compare row to itself.
-		if i != user {
-			// get cosine similarity for other scores.
-			other := preference.GetRowVector(i).Array()
-			cosSim := CosineSim(userRatings, other)
-			// get product recs for neighbors
-			for idx, val := range other {
-				if (userRatings[idx] == 0 || math.IsNaN(userRatings[idx])) && val != 0 {
-					weightedRating := val * cosSim
-					ratings[idx] += weightedRating
-					sims[idx] += cosSim
-				}
-			}
-		}
-	}
-	recs, values := calculateWeightedMean(ratings, sims, products)
-	return recs, values, nil
-}
+	// 根据距离对所有向量进行排序
+	sort.Slice(distances, func(i, j int) bool {
+		return distances[i].distance < distances[j].distance
+	})
 
-func calculateWeightedMean(ratings, sims map[int]float64, products []string) (recommends []string, values []float64) {
-	recommendations := make(map[float64]string, 0)
-	for k, v := range ratings {
-		meanProductRating := v / sims[k]
-		fmt.Println(meanProductRating)
-		if products != nil {
-			recommendations[meanProductRating] = products[k]
-		} else {
-			recommendations[meanProductRating] = strconv.Itoa(k)
-		}
+	// 选择最近的n个向量的索引
+	nearestIdxs := make([]int, n)
+	for i := 0; i < n; i++ {
+		nearestIdxs[i] = distances[i+1].idx // 排除目标向量本身，所以是i+1
 	}
-	recommends, values = sortMap(recommendations)
-	return
-}
 
-func sortMap(recs map[float64]string) ([]string, []float64) {
-	vals := make([]float64, 0)
-	for k, _ := range recs {
-		vals = append(vals, k)
-	}
-	sort.Sort(sort.Reverse(sort.Float64Slice(vals)))
-	prods := make([]string, 0)
-	for _, val := range vals {
-		prods = append(prods, recs[val])
-	}
-	return prods, vals
-}
-func sum(x []float64) float64 {
-	sum := float64(0)
-	for i := 0; i < len(x); i++ {
-		sum += x[i]
-	}
-	return sum
-}
-
-func MakeRatingMatrix(ratings []float64, rows, cols int) *DenseMatrix {
-	return MakeDenseMatrix(ratings, rows, cols)
+	return nearestIdxs
 }
