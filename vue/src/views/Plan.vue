@@ -178,24 +178,16 @@ export default {
     changeActivity:async function(index,id){
       const item = this.selectedSites[index];
       this.activity[index]=item.aid
-      //console.log(this.select[index].sname,item.aid);
-      axios.post('https://api.openai.com/v1/completions',
-          {
-            prompt: `请介绍在景点${this.select[index].sname}举办的${item.aid}活动。`,
-            max_tokens: 1024,
-            model: "text-davinci-003",},{
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer '+this.key
-            },
-          })
-          .then(response => {
-            const activityDescription = response.data.choices[0].text.trim()
-            this.$set(this.activityDescription, index, activityDescription)
-          })
-          .catch(error => {
-            console.log(error)
-          })
+
+      this.$axios.get("/user/get_activity_description",{params: {sname: this.select[index].sname,
+          description:item.aid}}).then(response =>{
+            console.log(response)
+          this.$set(this.activityDescription, index, response.data.data[0])
+      }).catch(error => {
+        console.log(error)
+      })
+
+
     },
     changeSite:async function(index,value) {
       this.select.push()

@@ -2,11 +2,11 @@
 <div class="all">
   <div class="home">
     <el-container height="100%">
-      <el-aside width="120px">
+      <el-aside width="200px">
         <Nav :final_tag="gettag"></Nav>
       </el-aside>
       <el-main>
-        <chat-home v-bind:tags="tag"></chat-home>
+        <chat-home :tags="tag"></chat-home>
       </el-main>
     </el-container>
   </div>
@@ -30,7 +30,9 @@ export default {
   },
   methods:{
     gettag(tag){
-      this.tag=tag
+      this.tag=tag;
+      console.log(this.tag)
+
     }
   }
 };
@@ -39,7 +41,7 @@ export default {
 <style lang="scss" scoped>
 .home {
   width: 90vw;
-  height: 87vh;
+  height: 90vh;
   background-color: rgb(39, 42, 55);
   border-radius: 15px;
   position: absolute;

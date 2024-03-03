@@ -10,31 +10,6 @@
         <div class="name">{{ frinedInfo.sname }}</div>
         <div class="detail">{{ frinedInfo.description }}</div>
       </div>
-<!--      <div class="other-fun">-->
-<!--        <span class="iconfont icon-shipin" @click="video"> </span>-->
-<!--        <span class="iconfont icon-gf-telephone" @click="telephone"></span>-->
-<!--        <label for="docFile">-->
-<!--          <span class="iconfont icon-wenjian"></span>-->
-<!--        </label>-->
-<!--        <label for="imgFile">-->
-<!--          <span class="iconfont icon-tupian"></span>-->
-<!--        </label>-->
-<!--        <input-->
-<!--            type="file"-->
-<!--            name=""-->
-<!--            id="imgFile"-->
-<!--            @change="sendImg"-->
-<!--            accept="image/*"-->
-<!--        />-->
-<!--        <input-->
-<!--            type="file"-->
-<!--            name=""-->
-<!--            id="docFile"-->
-<!--            @change="sendFile"-->
-<!--            accept="application/*,text/*"-->
-<!--        />-->
-<!--        &lt;!&ndash; accept="application/*" &ndash;&gt;-->
-<!--      </div>-->
     </div>
     <div class="botoom">
       <div class="chat-content" ref="chatContent">

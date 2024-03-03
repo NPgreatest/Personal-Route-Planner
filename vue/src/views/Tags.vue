@@ -189,6 +189,7 @@ ul, li {
 .tag-area li {
   list-style: none;
   float: left;
+  margin-bottom: 10px;
 }
 
 .blog-area {

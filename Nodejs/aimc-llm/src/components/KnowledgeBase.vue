@@ -142,8 +142,8 @@
           <div style="display: flex;margin-top: 6px;">知识库详情：{{ current_kb.details }}</div>
           <!-- <div style="display: flex;margin-top: 6px;">{{ current_kb.details }}</div> -->
           <div style="display: flex;flex-direction: row;margin-top: 6px;">
-            <div style="margin-right: 20px;">模型：智谱</div>
-            <div>更新时间：2023-11-24</div>
+            <div style="margin-right: 20px;">模型：OpenAi Embedding</div>
+            <div>更新时间：2024-3-22</div>
           </div>
         </div>
       </div>
@@ -308,7 +308,7 @@
             </el-form-item>
             <el-form-item label="向量化模型" style="width: 598px;">
               <el-select v-model="form.model" placeholder="选择模型" style="width: 598px;">
-                <el-option label="智谱" value="zhipu" />
+                <el-option label="OpenAI Embedding" value="zhipu" />
               </el-select>
             </el-form-item>
           </el-form>
@@ -474,7 +474,7 @@
       </el-form-item>
       <el-form-item label="向量化模型" style="width: 790px;">
         <el-select v-model="form.model" placeholder="选择模型" style="width: 790px;">
-          <el-option label="智谱" value="zhipu" />
+          <el-option label="OpenAI Embedding" value="openAI" />
         </el-select>
       </el-form-item>
     </el-form>
@@ -643,14 +643,14 @@ export default {
       filterAllfile: [],
     }
   },
-  // watch: {  
-  //   knowledgeList: {  
-  //     handler(newVal, oldVal) {  
-  //       this.$store.dispatch('knowledge/getKnowledgeList')  
-  //     },  
-  //     // deep: true  
-  //   }  
-  // },  
+  // watch: {
+  //   knowledgeList: {
+  //     handler(newVal, oldVal) {
+  //       this.$store.dispatch('knowledge/getKnowledgeList')
+  //     },
+  //     // deep: true
+  //   }
+  // },
   computed: {
     ...mapGetters(['test_hello', "knowledgeList", 'fileList']),
     totalPageskb() {
@@ -904,8 +904,8 @@ export default {
       return e.substring(0, 10) + " " + e.substring(12, 19);
     },
     formatfilename(row, column, e) {
-      // let filenameformat = e.split('.'); 
-      // return filenameformat[0]; 
+      // let filenameformat = e.split('.');
+      // return filenameformat[0];
       return e
     },
     generateSequentialColorStyle() {

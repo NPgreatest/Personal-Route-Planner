@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -39,7 +40,7 @@ func (u *UserController) GetSummary(ctx *gin.Context) *response.Response {
 	t1 := ctx.Query("sites")
 	t2 := ctx.Query("activities")
 	tag, err := u.tagService.FindTagName(con)
-	raw, err := u.userService.GetSummary(con)
+	raw, err := u.userService.GetSummary(rand.Int()%5 + 1)
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
@@ -232,6 +233,17 @@ func (u *UserController) GetActivity(ctx *gin.Context) *response.Response {
 	var temp []t
 	for _, v := range res {
 		temp = append(temp, t{name: v})
+	}
+	return response.ResponseQuerySuccess(res)
+}
+
+func (u *UserController) GetActivityDescription(ctx *gin.Context) *response.Response {
+	sname := ctx.Query("sname")
+	description := ctx.Query("description")
+	res, err := Node.QueryNodeChatGPT("请模拟官方的身份介绍在景点" + sname + "举办的" + description + "活动。")
+	if err != nil {
+		fmt.Println("GetActivityDescription wrong")
+		return response.ResponseQueryFailed()
 	}
 	return response.ResponseQuerySuccess(res)
 }

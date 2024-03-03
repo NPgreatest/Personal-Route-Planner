@@ -40,5 +40,6 @@ func registerUserRouters(engine *gin.Engine) {
 		UserGroup.GET("/getsitegpt", Decorate(userRouter.SiteGPT))
 		UserGroup.GET("/getsummary", Decorate(userRouter.GetSummary))
 		UserGroup.GET("/getactivity", Decorate(userRouter.GetActivity))
+		UserGroup.GET("/get_activity_description", Decorate(userRouter.GetActivityDescription))
 	}
 }

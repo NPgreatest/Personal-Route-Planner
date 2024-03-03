@@ -5,7 +5,7 @@
         <h1>景点咨询</h1>
       </div>
       <div class="online-person">
-        <span class="onlin-text">聊天列表</span>
+        <span class="onlin-text">可选景点</span>
         <div class="person-cards-wrapper">
           <div
               class="personList"
@@ -22,7 +22,6 @@
       </div>
     </div>
     <div class="chatRight">
-      <!-- <router-view></router-view> -->
       <div v-if="showChatWindow">
         <ChatWindow
             :frinedInfo="chatWindowInfo"
@@ -31,7 +30,6 @@
       </div>
       <div class="showIcon" v-else>
         <span class="iconfont icon-snapchat"></span>
-        <!-- <img src="@/assets/img/snapchat.png" alt="" /> -->
       </div>
     </div>
     <!-- <el-col :span="4"><div class="grid-content bg-purple"></div></el-col> -->
@@ -67,8 +65,10 @@ export default {
   },
   watch:{
     tags:{
-      handler(newValue,oldValue){
-        this.updateSites(newValue);
+      immediate:true,
+      handler(tags) {
+        console.log({tags})
+        this.updateSites(tags);
       }
     }
   },
@@ -78,14 +78,15 @@ export default {
   methods: {
     updateSites:async function(v){
       const {data: res} = await this.$axios.get("/home/sitesbytags", {params: {tagid: v}});
+      console.log(res)
       if(res.status === 1) {
         this.personList = res.data.length > 0 ? res.data[0] : this.personList;
-        for(var i=0;i<this.personList.length;i++){
-          this.personList[i].short=this.personList[i].description.substr(0,11)+"..."
-        }
+        // for(var i=0;i<this.personList.length;i++){
+        //   this.personList[i].short=this.personList[i].description.substr(0,11)+"..."
+        // }
+        console.log(this.personList)
       } else {
         this.$message.error("获取景点失败，请重试")
-        return
       }
     },
     getSites:async function(){

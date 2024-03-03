@@ -7,7 +7,7 @@ type ActivityDao struct {
 func NewActivityDao() *ActivityDao {
 	return &ActivityDao{
 		sql: []string{
-			`SELECT name FROM activity WHERE attribute=?`,
+			`SELECT detail FROM activity WHERE sid=?`,
 		}}
 }
 

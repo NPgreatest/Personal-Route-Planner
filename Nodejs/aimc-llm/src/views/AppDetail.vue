@@ -149,9 +149,7 @@ export default {
     data() {
         return {
             model_list: [
-                { '_id': '654dd9c4ea13fc974c0504c9', 'name': 'chatgml_turbo' },
-                { '_id': '654dd9feea13fc974c0504cd', 'name': 'skylark_plus' },
-                { '_id': '654dda09ea13fc974c0504d0', 'name': 'skylark_pro' }
+                { '_id': '654dd9c4ea13fc974c0504c9', 'name': 'openai_gpt_3.5_turbo' },
             ],
             showPopup: "（Prompt）是一种用于指导人工智能模型生成输出的小段文本，您可以使用提示词来精确地描述希望模型执行的任务，可以包含一些回答示例，或者提供有关输入数据的一些背景信息、输出要求等。",
             flag1: true,
@@ -274,20 +272,20 @@ export default {
         },
         handleSwitchChange(newVal) {
             if (!newVal) {
-                // 开关尝试关闭时，弹出确认弹框  
+                // 开关尝试关闭时，弹出确认弹框
                 this.$confirm('确认要关闭吗？', '关闭确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    // 确认关闭  
+                    // 确认关闭
                     this.$store.dispatch('stopApp/stopApp', this.$route.params._id).then((res) => {
                         this.$router.go(0)
                     }).catch(() => {
                         console.log('[HomeView]: 获取hello失败！')
                     });
                 }).catch(() => {
-                    // 取消关闭，保持原状态 
+                    // 取消关闭，保持原状态
                     this.isSwitchOn = true
                 });
             }
