@@ -3,7 +3,6 @@ package main
 import (
 	"Personal-Route-Planner/db/dao"
 	"Personal-Route-Planner/router"
-	"Personal-Route-Planner/utils"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,6 @@ import (
 )
 
 func main() {
-	utils.GenerateId(1)
 	engine := gin.New()
 	//gin.SetMode(gin.ReleaseMode)
 

@@ -12,7 +12,7 @@ type TagDao struct {
 func NewTagDao() *TagDao {
 	return &TagDao{sql: []string{
 		`SELECT * FROM tags`,
-		`SELECT sites.sid,sname,description,pic,website FROM sites,sites_tags WHERE sites.sid=sites_tags.sid AND sites_tags.tagid=?`,
+		`SELECT distinct sites.sid,sname,description,pic,website FROM sites,sites_tags WHERE sites.sid=sites_tags.sid AND sites_tags.tagid=?`,
 		`SELECT name FROM tags WHERE tags.tagid=?`,
 	}}
 }

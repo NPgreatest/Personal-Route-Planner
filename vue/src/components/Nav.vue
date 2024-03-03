@@ -9,8 +9,7 @@
           @click="changeMenu(index)"
         >
           <div class="block"></div>
-          <el-button style="left: -33px; " type="text" @click="change(item.tagid)">{{item.name}}</el-button>
-<!--          <b-avatar class="comment-avatar" :src="item.pic" size="2rem" style="left: -33px; "></b-avatar>-->
+          <el-button style="left: 0px;" type="text" @click.stop="change(item.tagid)">{{item.name}}</el-button>
         </li>
       </ul>
     </div>
@@ -53,6 +52,7 @@ export default {
   },
   methods: {
     change:async function(value){
+      console.log({value,})
       this.final_tag(value);
     },
     ava:async function(){
@@ -69,6 +69,7 @@ export default {
       }
     },
     changeMenu(index) {
+      console.log("changeMenu")
       this.current = index;
     },
   },
@@ -86,17 +87,17 @@ export default {
     top: 40%;
     transform: translate(0, -50%);
     .menu-list {
-      margin-left: 10px;
+      margin-left: -20px;
 
       li {
-        margin: 40px 0 0 0;
+        margin: 5px 0 0 0;
         list-style: none;
         cursor: pointer;
         position: relative;
         .block {
           background-color: rgb(29, 144, 245);
           position: absolute;
-          left: -50px;
+          left: -20px;
           width: 10px;
           height: 35px;
           transition: 0.5s;
@@ -117,8 +118,8 @@ export default {
   }
   .own-pic {
     position: absolute;
-    bottom: 10%;
-    margin-left: 25px;
+    bottom: 2%;
+    margin-left: 145px;
   }
 }
 .activeNav {
