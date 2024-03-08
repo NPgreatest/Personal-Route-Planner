@@ -10,7 +10,7 @@ WORKDIR /build
 COPY ["main.go","go.mod","go.sum","./"]
 COPY ["/conf","./"]
 COPY . .
-
+RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 RUN go mod download 
 RUN go build -ldflags="-s -w" -o /app/route_planner
 

@@ -1,10 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AppView from '../views/AppView.vue'
 import AppCreate from '../views/AppCreate.vue'
 import AppEdit from '../views/AppEdit.vue'
 import AppUse from '../views/AppUse.vue'
 import AppDetail from '@/views/AppDetail.vue'
+
+
 
 const routes = [
   {
@@ -18,7 +20,7 @@ const routes = [
     component: AppView,
   },
   {
-    path:'/create',
+    path: '/create',
     name:'create',
     component:AppCreate
   },
@@ -39,8 +41,14 @@ const routes = [
   }
 ]
 
+// export default new router({
+//   mode: 'history', // 尝试改为 'hash' 如果你遇到路由问题
+//   routes
+// })
+
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes
 })
 

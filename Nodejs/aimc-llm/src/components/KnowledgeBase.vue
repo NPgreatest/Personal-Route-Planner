@@ -74,9 +74,9 @@
         <div class="knowledge-card">
           <div class="card-head-row">
             <div class="card-name">
-              <div class="card-avatar" :style="generateSequentialColorStyle()">
-                {{ item.name[0] }}
-              </div>
+<!--              <div class="card-avatar" :style="generateSequentialColorStyle()">-->
+<!--                X-->
+<!--              </div>-->
               <span style="margin-right: 10px;">{{ item.name }}</span>
               <!-- <div style="margin-left: 20px;font-size: small;" :style="tagColor()">{{ item.state }}</div> -->
               <!-- <el-tag>{{ item.state }}</el-tag> -->
@@ -112,9 +112,6 @@
             <div>
               <el-avatar :icon="UserFilled" />
             </div>
-            <!-- <div>
-              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-            </div> -->
           </div>
         </div>
       </el-col>
@@ -643,14 +640,14 @@ export default {
       filterAllfile: [],
     }
   },
-  // watch: {
-  //   knowledgeList: {
-  //     handler(newVal, oldVal) {
-  //       this.$store.dispatch('knowledge/getKnowledgeList')
-  //     },
-  //     // deep: true
-  //   }
-  // },
+  watch: {
+    knowledgeList: {
+      handler(newVal, oldVal) {
+
+      },
+      // deep: true
+    }
+  },
   computed: {
     ...mapGetters(['test_hello', "knowledgeList", 'fileList']),
     totalPageskb() {
@@ -663,6 +660,8 @@ export default {
       this.filterAllkb = this.filter_allkb()
       const startIndexkb = (this.currentPagekb - 1) * this.pageSizekb;
       const endIndexkb = startIndexkb + this.pageSizekb;
+      console.log('res');
+      console.log(this.filterAllkb.slice(startIndexkb, endIndexkb));
       return this.filterAllkb.slice(startIndexkb, endIndexkb);
     },
     paginatedfiles() {
@@ -676,8 +675,8 @@ export default {
 
   },
   mounted() {
-
     this.$store.dispatch('knowledge/getKnowledgeList').then((res) => {
+      console.log('dispatch success')
     }).catch(() => {
       console.log('[KnowledgeBase]: 获取知识库失败！')
     })

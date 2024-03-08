@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 
 const service = axios.create({
-  baseURL:'/api', // url = base url + request url
+  baseURL:'/admin_api', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 120000 // request timeout
 })

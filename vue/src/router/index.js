@@ -25,6 +25,7 @@ VueAMap.initAMapApiLoader({
     plugin: ['AMap.Weather','AMap.PlaceSearch','AMap.Driving'],
     v: '1.4.4'
 });
+
 window._AMapSecurityConfig = {
     securityJsCode:'1dc99b3b717938eb7873a7fe779f38cc',
 }

@@ -9,6 +9,7 @@ ENV CREATE_DB_SH create_db.sh
 
 # 拷贝sql文件和脚本文件
 COPY mysql.sql /mysql.sql
+COPY start.sql /start.sql
 COPY $CREATE_DB_SH $AUTO_RUN_DIR
 # 赋予脚本执行权限
 RUN chmod a+x $AUTO_RUN_DIR/$CREATE_DB_SH

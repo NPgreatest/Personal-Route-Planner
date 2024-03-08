@@ -9,8 +9,6 @@ require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/sashabaranov/go-openai v1.8.0
-	github.com/skelterjohn/go.matrix v0.0.0-20130517144113-daa59528eefd
 	github.com/spf13/viper v1.15.0
 	golang.org/x/net v0.5.0
 )
