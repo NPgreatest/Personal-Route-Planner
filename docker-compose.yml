@@ -52,8 +52,6 @@ services:
       webapp:
     depends_on:
       - mongodb
-    volumes:
-      - ./Nodejs/aimc-node:/usr/src/app
     ports:
       - "3000:3000"
 

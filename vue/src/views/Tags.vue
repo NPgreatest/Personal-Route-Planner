@@ -171,12 +171,12 @@ ul, li {
 
 .title {
   font-size: 450%;
-  color: #ffffff;
+  color: #000000;
   margin-bottom: 50px;
   bottom: 0 !important;
   right: 0 !important;
   font-family:'STXingkai';
-  opacity: 0.5;
+  //opacity: 0.5;
   padding-top: 6%;
 }
 
@@ -184,12 +184,14 @@ ul, li {
   width: 840px;
   margin: 0 auto;
   overflow: hidden;
+  color: #000000;
 }
 
 .tag-area li {
   list-style: none;
   float: left;
   margin-bottom: 10px;
+  color: #000000;
 }
 
 .blog-area {

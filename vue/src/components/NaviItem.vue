@@ -19,27 +19,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 i {
-  color: #fda085 !important;
+  color: #fda085; /* Keeping your existing icon color, remove !important if not necessary */
 }
 
 .nav-item {
   line-height: 40px;
   cursor: pointer;
   padding-bottom: 5px;
-  text-decoration:none;
-  color: black;
-  font-weight: 40;
+  text-decoration: none;
+  color: #000000; /* Light blue for the default state */
+  font-weight: bold; /* Making the text bold */
 }
 
-.nav-item:hover, .active {
-  font-weight: bold;
-  color: #fda085;
-  border-bottom: 2px solid #fda085;
+.nav-item:hover {
+  color: #00008b; /* Deep blue on hover */
+  border-bottom: 2px solid #00008b; /* Adding deep blue underline on hover */
 }
 
-.nav-item:hover .active {
-  border-bottom: 4px solid #fda085;
+.active {
+  color: #00008b; /* Deep blue when active */
+  border-bottom: 4px solid #00008b; /* Deeper underline for active state */
 }
 </style>

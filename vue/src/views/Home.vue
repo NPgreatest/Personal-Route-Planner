@@ -4,7 +4,7 @@
 
     <div class="background2">
       <img :src="imgSrc2" width="100%" height="100%" alt="" />
-      <bubbles-effect :options="options" class="bubble"></bubbles-effect>
+<!--      <bubbles-effect :options="options" class="bubble"></bubbles-effect>-->
       <div id="title">
 
         <div>

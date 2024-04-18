@@ -16,7 +16,7 @@
         </a>
       </div>
       <div class="blog-desc">
-        <p class="text-ellipsis">{{item.description}}</p>
+        <p class="text-ellipsis">{{cleanDescription(item.description)}}</p>
       </div>
     </div>
   </div>
@@ -32,6 +32,11 @@ export default {
   data() {
     return {
 
+    }
+  },
+  methods:{
+    cleanDescription(description) {
+      return description.replace(/[\*\#]/g, '');
     }
   }
 

@@ -3,6 +3,7 @@
   <div class="background">
     <img :src="imgSrc" width="100%" height="100%" alt="" />
   </div>
+
 <div class="elForm">
   <el-form ref="form" :model="form" label-width="220px" style="margin: auto">
     <el-row  class="tag-area" :gutter="20" style="margin: auto; display: flex;flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px "    >
@@ -15,13 +16,13 @@
     </el-row>
 
     <el-form-item  >
-      <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 请输入起点： </span></span>
+      <span slot="label"><span style="color: #000000;font-size: 24px;font-weight: bold"> 请输入起点： </span></span>
       <el-input placeholder="起点" v-model="input" style="width: 200px"></el-input>
     </el-form-item>
 
     <div v-for="(item, index) in selectedSites" :key="index" >
       <el-form-item>
-        <span slot="label"><span style="color: #00B5AD;font-size: 24px;"> 选择第{{ index + 1 }}个景点： </span></span>
+        <span slot="label"><span style="color: #000000;font-size: 24px;font-weight: bold"> 选择第{{ index + 1 }}个景点： </span></span>
         <el-select v-model="item.id" @change="changeSite(index,item.id)" placeholder="选择感兴趣的景点" value-key="id">
           <el-option v-for="site in availableSites[index]" :label="site.sname" :value="site.sid" :key="site.sid"></el-option>
         </el-select>
@@ -30,7 +31,7 @@
       </el-form-item>
 
       <el-form-item style="display: inline-block; margin-right: 10px;">
-        <span slot="label" style="color: #00B5AD;font-size: 24px;"> 选择该景点活动： </span>
+        <span slot="label" style="color: #000000;font-size: 24px;font-weight: bold"> 选择该景点活动： </span>
         <el-select v-model="item.aid" @change="changeActivity(index,item.id)" placeholder="选择感兴趣的景点" value-key="name" >
           <el-option v-for="site in activities[index]" :label="site" :value="site" :key="site"></el-option>
         </el-select>
@@ -291,6 +292,16 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  font-size: 450%;
+  color: #000000;
+  margin-bottom: 50px;
+  bottom: 0 !important;
+  right: 0 !important;
+  font-family:'STXingkai';
+  //opacity: 0.5;
+  padding-top: 6%;
+}
 .background {
   width: 100%;
   height: 100%;
@@ -319,9 +330,13 @@ export default {
   list-style: none;
   float: left;
 }
+.buttons{
+  margin-bottom: 10px; /* 增加底部外边距 */
+}
 .buttons:hover {
   transform:  scale(1.22);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
 }
 .container {
   width: 100%;

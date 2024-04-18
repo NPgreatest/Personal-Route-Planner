@@ -64,6 +64,7 @@ export default {
           this.$message.success(res.message);
           window.sessionStorage.setItem("token", token);
           window.sessionStorage.setItem("userId", name);
+
           await this.$router.push("/home")
         } else {
           this.$message.error('登录出错请重新输入');

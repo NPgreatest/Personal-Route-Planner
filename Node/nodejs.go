@@ -25,7 +25,7 @@ func QueryNodeQuery(question string, targetID int) (string, error) {
 	if err != nil {
 		return "调用Nodejs后端失败", err
 	}
-	resp, err := http.Post("http://"+viper.GetString("node_config.node_prefix")+"/api/query", "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post("http://"+viper.GetString("node_config.node_prefix")+"/admin_api/query", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return "调用Nodejs后端失败", err
 	}
@@ -46,7 +46,7 @@ func QueryNodeChatGPT(question string) (string, error) {
 		"query": question,
 	})
 
-	resp, err := http.Post("http://"+viper.GetString("node_config.node_prefix")+"/api/query/normal", "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post("http://"+viper.GetString("node_config.node_prefix")+"/admin_api/query/normal", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return "调用Nodejs后端失败", err
 	}

@@ -5,7 +5,7 @@
 
     <!-- 标题 -->
     <div class="title">
-      <h1 style="padding-top: 60px;" > {{ ' '+site.sname+' ' }}</h1>
+      <h1 style="padding-top: 60px;color: #000000;font-size: 64px;font-weight: bold" > {{ ' '+site.sname+' ' }}</h1>
     </div>
     <div style="display: flex">
       <div style="flex: 1"></div>
@@ -28,7 +28,7 @@
           <div class="background">
             <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
           </div>
-          <el-link  :href="site.website"  type="success" class="link">官方网址</el-link>
+          <el-link  :href="site.website"  class="link">官方网址</el-link>
           <div class="grid-content ep-bg-purple" />
         </el-col>
 
@@ -388,7 +388,8 @@ export default {
 }
 .link{
   left: 50px;
-  font: 2em/1.5 Tahoma,Helvetica,Arial,'Times New Roman',sans-serif !important;
+  font: 3em/1.5 Tahoma,Helvetica,Arial,'Times New Roman',sans-serif !important;
+  color: #000000;
 }
 
 
