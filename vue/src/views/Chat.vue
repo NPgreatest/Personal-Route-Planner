@@ -8,7 +8,7 @@
       </div>
       <div class="info-detail">
         <div class="name">{{ frinedInfo.sname }}</div>
-        <div class="detail">{{ frinedInfo.description }}</div>
+<!--        <div class="detail">{{ frinedInfo.description }}</div>-->
       </div>
     </div>
     <div class="botoom">
@@ -78,13 +78,13 @@
         </div>
       </div>
       <div class="chatInputs">
-        <div class="emoji boxinput" @click="clickEmoji">
-<!--          <img src="@/assets/img/emoji/smiling-face.png" alt="" />-->
+        <div class="emoji boxinput" @click="clickEmoji" @mouseenter="showTitleOn" @mouseleave="showTitleOff">
+          <img v-if="enableHistory" src="../static/history_on.png" alt="Emoji On" />
+          <img v-else src="../static/history.png" alt="Emoji Off" />
         </div>
         <div class="emoji-content">
           <Emoji
-              v-show="showEmoji"
-              @sendEmoji="sendEmoji"
+              v-show="showTitle"
               @closeEmoji="clickEmoji"
           ></Emoji>
         </div>
@@ -93,6 +93,7 @@
           <img src="../static/rocket.png" alt="" />
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -124,7 +125,8 @@ export default {
     return{
       chatList: [],
       inputMsg: "",
-      showEmoji: false,
+      enableHistory: false,
+      showTitle: false,
       friendInfo: {},
       srcImgList: [],
       // imgSrc:require('../static/background.jpg')
@@ -153,7 +155,15 @@ export default {
     },
     //关闭标签框
     clickEmoji() {
-      this.showEmoji = !this.showEmoji;
+      this.enableHistory = !this.enableHistory;
+    },
+    showTitleOn(){
+      this.showTitle = true;
+    },
+    showTitleOff(){
+      setTimeout(() => {
+        this.showTitle = false;
+      }, 200); // 300毫秒后隐藏，根据需要调整时间
     },
     //发送文字信息
     sendText:async function(){
@@ -167,7 +177,7 @@ export default {
           uid: "1001", //uid
         };
         this.sendMsg(chatMsg);
-        const {data: res} = await this.$axios.get("/user/getsitegpt",{params: {sid: this.frinedInfo.sid,detail:this.inputMsg}});
+        const {data: res} = await this.$axios.get("/user/getsitegpt",{params: {sid: this.frinedInfo.sid,detail:this.inputMsg, history:this.enableHistory?"on":"false"}});
         if(res.status === 1) {
           var str = res.data.length > 0 ? res.data[0] : "";
           let chatMsg2 = {
@@ -219,7 +229,7 @@ export default {
   position: relative;
 
 .top {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 &::after {
    content: "";
    display: block;
@@ -230,7 +240,7 @@ export default {
 }
 .info-detail {
   float: left;
-  margin: 5px 20px 0;
+  margin: 8px 20px 0;
 .name {
   font-size: 20px;
   font-weight: 600;
@@ -260,7 +270,7 @@ input {
 }
 .botoom {
   width: 100%;
-  height: 70vh;
+  height: 72vh;
   background-color: rgb(50, 54, 68);
   border-radius: 20px;
   padding: 20px;

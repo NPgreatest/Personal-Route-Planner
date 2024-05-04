@@ -2,10 +2,9 @@
 <template>
 
   <div class="site_se">
-
-    <!-- 标题 -->
     <div class="title">
-      <h1 style="padding-top: 60px;color: #000000;font-size: 64px;font-weight: bold" > {{ ' '+site.sname+' ' }}</h1>
+      <el-link  :href="site.website"  class="link">{{ ' '+site.sname+' ' }}</el-link>
+<!--      <h1 style="padding-top: 60px;color: #000000;font-size: 64px;font-weight: bold" > {{ ' '+site.sname+' ' }}</h1>-->
     </div>
     <div style="display: flex">
       <div style="flex: 1"></div>
@@ -19,16 +18,18 @@
       <p top="100px"></p>
       <el-row type="flex" class="row-bg" justify="center"  gutter="50">
 
-        <el-col :span="6"><div class="grid-1" style="left: 10%" />
-          <div id="chart" style="width: 600px; height: 400px; left:-30%"></div>
-          <div class="grid-content ep-bg-purple" />
+        <el-col :span="6">
+          <div class="grid-1" style="left: 10%; font-size: 16px; font-weight: bold;">
+            <div id="chart" style="width: 600px; height: 400px; left:-30%;"></div>
+            <div class="grid-content ep-bg-purple"></div>
+          </div>
         </el-col>
 
         <el-col :span="6"><div class="grid-2" style="top: 10%; " />
           <div class="background">
             <img :src="imgSrc" style="width:70%; height:70%; top:100%; left: 30%"  />
           </div>
-          <el-link  :href="site.website"  class="link">官方网址</el-link>
+<!--          <el-link  :href="site.website"  class="link">官方网址</el-link>-->
           <div class="grid-content ep-bg-purple" />
         </el-col>
 
@@ -36,7 +37,7 @@
 
 
     <!-- 正文 -->
-    <div class="content-outer">
+    <div class="content-outer" style="max-height: 500px; min-height: 100px; overflow: auto; border: 1px solid #ccc; padding: 20px; margin-bottom: 20px;">
       <div class="content-inner" v-html="site.description">
 
       </div>
@@ -248,32 +249,71 @@ export default {
       var option = {
         title: {
           text: "景点价格",
+          textStyle: {
+            fontSize: 18,
+            fontWeight: 'bold'
+          }
         },
         tooltip: {},
         legend: {
           data: ["价格"],
+          textStyle: {
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
         },
         xAxis: {
-          data: ["成人票","儿童票"],
+          data: [],
+          axisLabel: {
+            fontSize: 14,
+            fontWeight: 'bold'
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#eee',
+              width: 2
+            }
+          }
         },
-        yAxis: {},
+        yAxis: {
+          axisLabel: {
+            fontSize: 14,
+            fontWeight: 'bold'
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#eee',
+              width: 2
+            }
+          }
+        },
         series: [
           {
-            name: "销量",
+            name: "价格",
             type: "bar",
-            data: [0,0],
+            data: []
           },
         ],
       };
-      myChart.setOption(option);
-      for (var i=0;i<this.site.prices.length;i++){
-        //alert(this.site.prices[i].aimed);
-        option.xAxis.data[i]=this.site.prices[i].aimed;
-        option.series[0].data[i]=this.site.prices[i].price;
-      }
+
+      // 初始化图表配置
       myChart.setOption(option);
 
-    },
+      // 清空数据
+      option.xAxis.data = [];
+      option.series[0].data = [];
+
+      // 使用更现代的循环方法填充数据
+      for (const item of this.site.prices) {
+        option.xAxis.data.push(item.aimed);  // 目的地
+        option.series[0].data.push(item.price);  // 价格
+      }
+
+      // 使用更新的数据重新设置选项
+      myChart.setOption(option, true);  // `true` 确保图表不保留旧的数据
+    }
   }
 }
 </script>
@@ -317,7 +357,7 @@ export default {
 }
 
 .site_se {
-  background: url('~@/assets/bg1.jpg')  fixed 0px 0px;
+  background: url('/src/static/background.jpg')  fixed 0px 0px;
   //min-height: 1000px;
   //padding-top: 8%;
   width:100%;
@@ -387,8 +427,9 @@ export default {
 
 }
 .link{
-  left: 50px;
-  font: 3em/1.5 Tahoma,Helvetica,Arial,'Times New Roman',sans-serif !important;
+  margin: 50px;
+  left: 0px;
+  font: 2em/1.5 Tahoma,Helvetica,Arial,'Times New Roman',sans-serif !important;
   color: #000000;
 }
 
@@ -528,6 +569,8 @@ export default {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+  font-size: 16px; /* 设置字体大小 */
+  font-weight: bold; /* 字体加粗 */
 }
 
 </style>

@@ -201,6 +201,7 @@ func (u *UserController) UpdateUserInfo(ctx *gin.Context) *response.Response {
 func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 	sid, err := strconv.Atoi(ctx.Query("sid"))
 	str := ctx.Query("detail")
+	history := ctx.Query("history")
 	if err != nil {
 		fmt.Println("siteid wrong")
 		return response.ResponseQueryFailed()
@@ -208,7 +209,7 @@ func (u *UserController) SiteGPT(ctx *gin.Context) *response.Response {
 	if err != nil {
 		return response.ResponseQueryFailed()
 	}
-	res, err := Node.QueryNodeQuery(str, sid)
+	res, err := Node.QueryNodeQuery(str, sid, history)
 	if err != nil {
 		fmt.Println(err)
 		return response.ResponseQueryFailed()

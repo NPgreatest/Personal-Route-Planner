@@ -17,10 +17,11 @@ type Response struct {
 }
 
 // QueryAPI 函数发送请求到本地API，并解析响应
-func QueryNodeQuery(question string, targetID int) (string, error) {
+func QueryNodeQuery(question string, targetID int, history string) (string, error) {
 	requestBody, err := json.Marshal(map[string]interface{}{
-		"bind":  targetID,
-		"query": question,
+		"bind":    targetID,
+		"query":   question,
+		"history": history,
 	})
 	if err != nil {
 		return "调用Nodejs后端失败", err
