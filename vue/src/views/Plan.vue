@@ -228,6 +228,7 @@ export default {
     selected(id){
       this.selectid=id;
       localStorage.setItem('tags',id);
+      this.getUpdateFirstSites();
     },
     finish(){
       var temp=[];
@@ -238,6 +239,42 @@ export default {
       localStorage.setItem('routes', JSON.stringify(temp))
       localStorage.setItem('activites',JSON.stringify(this.activity))
         this.$router.push("/route")
+    },
+    async getUpdateFirstSites() {
+      try {
+        // 调用接口获取标签对应的景点信息
+        const { data: res } = await this.$axios.get(`/home/sitesbytags?tagid=${this.selectid}`);
+
+        if (res.status === 1) {
+          const sites = res.data;
+          if (sites.length > 0) {
+            // 清空 this.availableSites[0]
+            this.availableSites[0] = [];
+            // 随机选择5个景点下标作为候选项
+            const indices = this.getRandomSitesIndices(sites, 5);
+            console.log(indices);
+            // 根据下标将景点放入 this.availableSites[0]
+            indices.forEach(index => {
+              this.availableSites[0].push(this.sites[index-1]);
+            });
+            console.log(this.availableSites[0]);
+            console.log(this.sites);
+            console.log(this.availableSites[0].length)
+          } else {
+            this.$message.error("没有找到相关景点");
+          }
+        } else {
+          this.$message.error("获取景点信息失败");
+        }
+      } catch (error) {
+        this.$message.error("请求失败");
+        console.error(error);
+      }
+    },
+    getRandomSitesIndices(sites, count) {
+      const siteSids = sites[0].map(site => site.sid);
+      const shuffledSids = siteSids.sort(() => 0.5 - Math.random());
+      return shuffledSids.slice(0, Math.min(count, siteSids.length));
     },
     getFirstSites:async function() {
       const {data: res2} = await this.$axios.get("/home/alltags");

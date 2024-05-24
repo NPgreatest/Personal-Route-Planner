@@ -3,8 +3,6 @@ package dao
 import (
 	"Personal-Route-Planner/Algorithm"
 	"Personal-Route-Planner/model"
-	"encoding/json"
-	"errors"
 	"log"
 )
 
@@ -17,7 +15,7 @@ func NewRatingDao() *RatingDao {
 		sql: []string{
 			`INSERT INTO rating VALUES (?,?);`,
 			`UPDATE rating t SET t.rate=? WHERE t.name=?;`,
-			`SELECT rate FROM rating WHERE name=?;`,
+			`SELECT * FROM rating WHERE name=?;`,
 			`SELECT rate FROM rating;`,
 			`SELECT count(*) FROM sites;`,
 			`SELECT * FROM sites WHERE sid=?;`,
@@ -43,33 +41,69 @@ func (r *RatingDao) GetRecommand(name string, sid int) (sites []int, err error) 
 }
 
 func (r *RatingDao) Rating(rate model.Rating) error {
-	res, _ := json.Marshal(rate)
-	sql := `SELECT count(*) FROM rating WHERE name=?`
-	var c int
-	err := sqldb.Get(&c, sql, rate.Name)
+	// SQL 语句，用于插入和更新操作
+	insertSQL := `INSERT INTO route_planner.rating (name, sid, rating) VALUES (?, ?, ?)`
+	updateSQL := `UPDATE route_planner.rating SET rating = ? WHERE name = ? AND sid = ?`
+
+	// 开启事务处理，以保证数据一致性
+	tx, err := sqldb.Begin()
 	if err != nil {
 		return err
 	}
-	switch c {
-	case 0:
-		_, err = sqldb.Exec(r.sql[0], rate.Name, string(res))
-	case 1:
-		_, err = sqldb.Exec(r.sql[1], string(res), rate.Name)
-	default:
-		return errors.New("database wrong")
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	for _, r := range rate.Rate {
+		// 检查是否存在该用户对该景点的评分
+		var count int
+		err = tx.QueryRow(`SELECT count(*) FROM route_planner.rating WHERE name = ? AND sid = ?`, rate.Name, r.Sid).Scan(&count)
+		if err != nil {
+			return err
+		}
+
+		// 根据查询结果进行插入或更新操作
+		if count == 0 {
+			_, err = tx.Exec(insertSQL, rate.Name, r.Sid, r.Rate)
+		} else {
+			_, err = tx.Exec(updateSQL, r.Rate, rate.Name, r.Sid)
+		}
+		if err != nil {
+			return err
+		}
 	}
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
-func (r *RatingDao) CheckRating(name string) (rate string, err error) {
-	err = sqldb.Get(&rate, r.sql[2], name)
+func (r *RatingDao) CheckRating(name string) (rate []model.RateRes, err error) {
+	sql := `SELECT name, sid, rating FROM route_planner.rating WHERE name = ?`
+	rows, err := sqldb.Query(sql, name)
 	if err != nil {
-		return
+		return nil, err
 	}
-	return
+	defer rows.Close()
+
+	var rates []model.RateRes
+	for rows.Next() {
+		var rate model.RateRes
+		err := rows.Scan(&rate.Name, &rate.Sid, &rate.Rate)
+		if err != nil {
+			return nil, err
+		}
+		rates = append(rates, rate)
+	}
+
+	// Check for errors from iterating over rows.
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return rates, nil
 }
 
 func (r *RatingDao) GetMatrix() (res [][]float64, err error) {

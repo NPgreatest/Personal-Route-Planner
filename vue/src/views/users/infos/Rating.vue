@@ -4,11 +4,6 @@
     <el-card class="box-card">
       <!-- 搜索栏 -->
       <el-row :gutter="15">
-        <el-col :span="6">
-          <el-select  v-model="selectedSites"   @change="changeSites" clearable value-key="id"  placeholder="景点">
-            <el-option v-for="item in sites" :label="item.sname" :key="item.id" :value="item.id"></el-option>
-          </el-select>
-        </el-col>
 
         <el-col :span="4">
 
@@ -16,6 +11,13 @@
             <el-option v-for="item in types" :label="item.name" :value="item.id" :key="item.id" ></el-option>
           </el-select>
         </el-col>
+        <el-col :span="6">
+          <el-select  v-model="selectedSites"   @change="changeSites" clearable value-key="id"  placeholder="景点">
+            <el-option v-for="item in sites" :label="item.sname" :key="item.id" :value="item.id"></el-option>
+          </el-select>
+        </el-col>
+
+
 
         <el-col :span="2">
           <!-- 推荐选项 -->
@@ -97,8 +99,10 @@ export default {
       alert(this.sname)
     },
     getBlogList: async function() {
-      const{data: res} = await this.$axios.get("/user/getrate",{params: this.queryInfo});
-        this.blogs=res.data[0].rates
+      const{data: res} = await this.$axios.get("/user/getrate");
+      this.blogs=res.data[0]
+      console.log('test')
+      console.log(this.blogs)
         this.getNames();
     },
     getNames: async function(){

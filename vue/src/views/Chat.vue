@@ -139,9 +139,19 @@ export default {
     //获取聊天记录
     getFriendChatMsg() {
 
+      this.getavatar();
       this.scrollBottom();
     },
     //发送信息
+    async getavatar(){
+      const {data: res} = await this.$axios.get("/user/getinfo");
+      if(res.status === 1) {
+        this.userInfo= res.data.length > 0 ? res.data[0] : this.userInfo;
+        console.log(this.userInfo)
+      }else{
+        this.$message.error("获取头像失败")
+      }
+    },
     sendMsg(msgList) {
       this.chatList.push(msgList);
       this.scrollBottom();
@@ -168,10 +178,17 @@ export default {
     //发送文字信息
     sendText:async function(){
       if (this.inputMsg) {
+        let now = new Date();
+        let formattedTime = now.getFullYear() + '-' +
+            (now.getMonth() + 1).toString().padStart(2, '0') + '-' +
+            now.getDate().toString().padStart(2, '0') + ' ' +
+            now.getHours().toString().padStart(2, '0') + ':' +
+            now.getMinutes().toString().padStart(2, '0') + ':' +
+            now.getSeconds().toString().padStart(2, '0');
         let chatMsg = {
-          headImg: require("../static/thinking-face.png"),
-          name: "admin",
-          time: "09：12 AM",
+          headImg: (this.userInfo.avatar),
+          name: this.userInfo.name,
+          time: formattedTime,
           msg: this.inputMsg,
           chatType: 0, //信息类型，0文字，1图片
           uid: "1001", //uid
