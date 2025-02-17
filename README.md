@@ -21,9 +21,9 @@
 
 E-R图：
 
-![E-R](D:\Golang-Project\Personal-Route-Planner\display\E-R.svg)
+![E-R](display\E-R.svg)
 
 RAG模块展示图：
 
-<img src="D:\Golang-Project\Personal-Route-Planner\display\7f4049af55f8d3213c0c734092bcd2b.png" alt="7f4049af55f8d3213c0c734092bcd2b" style="zoom:50%;" />
+<img src="\display\7f4049af55f8d3213c0c734092bcd2b.png" alt="7f4049af55f8d3213c0c734092bcd2b" style="zoom:50%;" />
 
